@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SaveSync – Ludusavi Dashboard</title>
+<title>SaveSync – Ludusavi Command Helper</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -51,13 +51,10 @@ a,button,input,select,textarea{transition:color var(--tr),background var(--tr),b
 :focus-visible{outline:2px solid var(--p);outline-offset:3px;border-radius:var(--r0)}
 input,textarea,select{font:inherit;color:inherit}
 ul{list-style:none}
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:3px}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:3px}
 
 .sidebar{width:var(--sw);min-height:100dvh;background:var(--sf);border-right:1px solid var(--bdr);display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;left:0;bottom:0;z-index:100}
 .main{margin-left:var(--sw);flex:1;min-height:100dvh;display:flex;flex-direction:column;overflow-y:auto;height:100dvh}
-
 .logo-area{padding:1rem 1rem .75rem;border-bottom:1px solid var(--div);display:flex;align-items:center;gap:.75rem}
 .logo-text{font-size:var(--sm);font-weight:700;letter-spacing:-.02em}
 .logo-sub{font-size:var(--xs);color:var(--txm)}
@@ -68,17 +65,10 @@ ul{list-style:none}
 .nav-item:hover{background:var(--sfd);color:var(--tx)}
 .nav-item.active{background:var(--phl);color:var(--p)}
 .nav-item i{width:15px;height:15px;flex-shrink:0}
-
-.smb-widget{margin:.75rem .5rem;padding:.75rem;background:var(--sfo);border:1px solid var(--bdr);border-radius:var(--r1);font-size:var(--xs)}
-.smb-row{display:flex;align-items:center;gap:.5rem;color:var(--txm)}
-.dot{width:7px;height:7px;border-radius:var(--rf);flex-shrink:0}
-.dot-g{background:var(--ok)}.dot-r{background:var(--er)}.dot-y{background:var(--wa)}
-
 .sidebar-footer{padding:.75rem 1rem;border-top:1px solid var(--div);display:flex;align-items:center;justify-content:space-between}
 
 .topbar{background:var(--sf);border-bottom:1px solid var(--bdr);padding:.75rem 1.5rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:50;flex-wrap:wrap}
 .topbar-title{font-size:var(--lg);font-weight:600;letter-spacing:-.02em;flex:1;min-width:120px}
-.topbar-actions{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
 
 .page{display:none;padding:1.5rem;flex-direction:column;gap:1.25rem}
 .page.active{display:flex}
@@ -93,33 +83,54 @@ ul{list-style:none}
 .btn-bl{background:var(--blhl);color:var(--bl)}.btn-bl:hover{opacity:.85}
 .btn-sm{padding:.2rem .6rem;font-size:var(--xs)}
 .btn-ic{padding:.375rem;border-radius:var(--r1);color:var(--txm)}.btn-ic:hover{background:var(--sfd);color:var(--tx)}
-.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-del{color:var(--er);padding:.25rem;border-radius:var(--r0)}.btn-del:hover{background:var(--erhl)}
+.btn-del i{width:13px;height:13px}
 
 .card{background:var(--sf);border:1px solid var(--bdr);border-radius:var(--r2);box-shadow:var(--sh0);overflow:hidden}
 .card-hdr{padding:1rem 1.25rem;border-bottom:1px solid var(--div);display:flex;align-items:center;justify-content:space-between;gap:1rem}
 .card-title{font-size:var(--sm);font-weight:600}
-.card-ftr{padding:.75rem 1.25rem;border-top:1px solid var(--div);display:flex;align-items:center;justify-content:flex-end;gap:.5rem}
+
+.callout{display:flex;gap:.75rem;padding:1rem;border-radius:var(--r1);font-size:var(--xs);align-items:flex-start;line-height:1.6}
+.callout i{width:16px;height:16px;flex-shrink:0;margin-top:1px}
+.cl-info{background:var(--blhl);color:var(--bl);border:1px solid color-mix(in oklch,var(--bl) 25%,transparent)}
+.cl-ok{background:var(--okhl);color:var(--ok);border:1px solid color-mix(in oklch,var(--ok) 25%,transparent)}
+.cl-wa{background:var(--wahl);color:var(--wa);border:1px solid color-mix(in oklch,var(--wa) 25%,transparent)}
+.cl-er{background:var(--erhl);color:var(--er);border:1px solid color-mix(in oklch,var(--er) 30%,transparent)}
 
 /* GAME TABLE */
 .gt{width:100%;border-collapse:collapse}
 .gt th{font-size:10px;font-weight:500;color:var(--txm);text-transform:uppercase;letter-spacing:.06em;padding:.5rem 1rem;text-align:left;background:var(--sfo);border-bottom:1px solid var(--div);white-space:nowrap}
-.gt th:first-child,.gt td:first-child{width:36px;text-align:center}
 .gt td{padding:.625rem 1rem;font-size:var(--xs);border-bottom:1px solid var(--div);vertical-align:middle}
 .gt tr:last-child td{border-bottom:none}
 .gt tr:hover td{background:color-mix(in oklch,var(--sfd) 40%,transparent)}
 .gname{font-weight:500;font-size:var(--sm);color:var(--tx)}
 .gpath{font-family:var(--fm);font-size:10px;color:var(--txm);margin-top:2px;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.gacts{display:flex;gap:3px;align-items:center}
-
+.gacts{display:flex;gap:3px;align-items:center;justify-content:flex-end}
 .cb{width:15px;height:15px;accent-color:var(--p);cursor:pointer}
 
-.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:var(--rf);font-size:10px;font-weight:500}
-.badge i{width:10px;height:10px}
-.b-ok{background:var(--okhl);color:var(--ok)}
-.b-wa{background:var(--wahl);color:var(--wa)}
-.b-er{background:var(--erhl);color:var(--er)}
-.b-bl{background:var(--blhl);color:var(--bl)}
-.b-mu{background:var(--sfd);color:var(--txm)}
+/* CMD BLOCK */
+.cmd-block{background:var(--sfo);border:1px solid var(--bdr);border-radius:var(--r1);padding:.625rem 1rem;display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem}
+.cmd-block pre{font-family:var(--fm);font-size:11px;color:var(--p);line-height:1.7;white-space:pre-wrap;flex:1}
+.cmd-block .copy-btn{color:var(--txm);flex-shrink:0;padding:2px;border-radius:var(--r0)}.cmd-block .copy-btn:hover{color:var(--tx)}
+.cmd-block .copy-btn i{width:13px;height:13px}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:oklch(0 0 0/.55);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity var(--tr);backdrop-filter:blur(3px)}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--sf2);border:1px solid var(--bdr);border-radius:var(--r3);width:540px;max-width:calc(100vw - 2rem);box-shadow:var(--sh2);transform:translateY(8px);transition:transform var(--tr)}
+.overlay.open .modal{transform:translateY(0)}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--div)}
+.modal-title{font-size:var(--sm);font-weight:600}
+.modal-body{padding:1.25rem;display:flex;flex-direction:column;gap:1rem}
+.modal-ftr{padding:.75rem 1.25rem;border-top:1px solid var(--div);display:flex;justify-content:flex-end;gap:.5rem}
+
+/* REMOVE MODAL */
+.rm-opt{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem 1rem;border-radius:var(--r1);border:1px solid var(--bdr);cursor:pointer;transition:border-color var(--tr),background var(--tr)}
+.rm-opt:hover{background:var(--sfd)}
+.rm-opt.selected{border-color:var(--er);background:var(--erhl)}
+.rm-opt input{margin-top:3px;flex-shrink:0;accent-color:var(--er)}
+.rm-opt-name{font-size:var(--sm);font-weight:500;margin-bottom:3px}
+.rm-opt-desc{font-size:var(--xs);color:var(--txm)}
 
 .form-body{padding:1.25rem;display:flex;flex-direction:column;gap:1rem}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
@@ -131,60 +142,11 @@ ul{list-style:none}
 .fi.mo{font-family:var(--fm);font-size:11px}
 .fh{font-size:10px;color:var(--txf);line-height:1.5}
 
-/* LOG — rich */
-.log-wrap{display:flex;flex-direction:column;max-height:520px;overflow-y:auto}
-.log-entry{border-bottom:1px solid var(--div);font-size:var(--xs)}
-.log-entry:last-child{border-bottom:none}
-.log-hdr{display:flex;align-items:center;gap:.75rem;padding:.625rem 1.25rem;cursor:pointer;user-select:none}
-.log-hdr:hover{background:color-mix(in oklch,var(--sfd) 40%,transparent)}
-.log-dot{width:7px;height:7px;border-radius:var(--rf);flex-shrink:0}
-.ld-ok{background:var(--ok)}.ld-er{background:var(--er)}.ld-wa{background:var(--wa)}.ld-bl{background:var(--bl)}.ld-info{background:var(--p)}
-.log-summary{flex:1;color:var(--tx);font-weight:500}
-.log-time{font-family:var(--fm);color:var(--txf);flex-shrink:0;font-size:10px}
-.log-chevron{color:var(--txf);transition:transform var(--tr)}
-.log-chevron.open{transform:rotate(90deg)}
-.log-detail{display:none;padding:.5rem 1.25rem 1rem 2.75rem;background:var(--sfo);border-top:1px solid var(--div)}
-.log-detail.open{display:block}
-.log-detail pre{font-family:var(--fm);font-size:10px;color:var(--txm);white-space:pre-wrap;line-height:1.7}
-.log-detail .log-file{display:flex;align-items:baseline;gap:.5rem;margin-bottom:3px}
-.log-detail .lf-status{font-size:10px;font-weight:600;flex-shrink:0;width:60px}
-.lf-new{color:var(--ok)}.lf-mod{color:var(--bl)}.lf-del{color:var(--er)}.lf-skip{color:var(--txf)}
-.log-detail .lf-path{font-family:var(--fm);font-size:10px;color:var(--txm);word-break:break-all}
-.log-meta{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:.5rem;padding-bottom:.5rem;border-bottom:1px solid var(--div)}
-.log-meta span{font-size:10px;color:var(--txm)}
-.log-meta strong{color:var(--tx)}
-.log-cmd{background:var(--sf);border:1px solid var(--bdr);border-radius:var(--r0);padding:.375rem .625rem;margin-top:.5rem}
-.log-cmd pre{font-family:var(--fm);font-size:10px;color:var(--p);white-space:pre-wrap;line-height:1.6}
-.log-err{background:var(--erhl);border:1px solid color-mix(in oklch,var(--er) 30%,transparent);border-radius:var(--r0);padding:.375rem .625rem;margin-top:.5rem;font-family:var(--fm);font-size:10px;color:var(--er);white-space:pre-wrap;line-height:1.6}
-
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem}
-.kpi{background:var(--sf);border:1px solid var(--bdr);border-radius:var(--r2);padding:1rem;box-shadow:var(--sh0)}
-.kpi-l{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--txm);margin-bottom:.5rem}
-.kpi-v{font-size:var(--xl);font-weight:700;letter-spacing:-.04em;font-variant-numeric:tabular-nums lining-nums}
-.kpi-s{font-size:var(--xs);color:var(--txm);margin-top:2px}
-
-.sel-bar{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;background:var(--phl);border-radius:var(--r1);font-size:var(--xs);color:var(--p);font-weight:500;flex-wrap:wrap}
-.sel-bar i{width:14px;height:14px}
-
-.progress-wrap{height:4px;background:var(--sfd);border-radius:var(--rf);overflow:hidden}
-.progress-fill{height:100%;background:var(--p);border-radius:var(--rf);width:0%;transition:width .4s ease}
-
-.overlay{position:fixed;inset:0;background:oklch(0 0 0/.55);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity var(--tr);backdrop-filter:blur(3px)}
-.overlay.open{opacity:1;pointer-events:all}
-.modal{background:var(--sf2);border:1px solid var(--bdr);border-radius:var(--r3);width:520px;max-width:calc(100vw - 2rem);box-shadow:var(--sh2);transform:translateY(8px);transition:transform var(--tr)}
-.overlay.open .modal{transform:translateY(0)}
-.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--div)}
-.modal-title{font-size:var(--sm);font-weight:600}
-.modal-body{padding:1.25rem;display:flex;flex-direction:column;gap:1rem}
-.modal-ftr{padding:.75rem 1.25rem;border-top:1px solid var(--div);display:flex;justify-content:flex-end;gap:.5rem}
-
-.callout{display:flex;gap:.75rem;padding:1rem;border-radius:var(--r1);font-size:var(--xs);align-items:flex-start;line-height:1.6}
-.callout i{width:16px;height:16px;flex-shrink:0;margin-top:1px}
-.cl-info{background:var(--blhl);color:var(--bl);border:1px solid color-mix(in oklch,var(--bl) 25%,transparent)}
-.cl-ok{background:var(--okhl);color:var(--ok);border:1px solid color-mix(in oklch,var(--ok) 25%,transparent)}
-.cl-wa{background:var(--wahl);color:var(--wa);border:1px solid color-mix(in oklch,var(--wa) 25%,transparent)}
-.cl-er{background:var(--erhl);color:var(--er);border:1px solid color-mix(in oklch,var(--er) 30%,transparent)}
-
+.srow{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--div)}
+.srow:last-child{border-bottom:none}
+.sinfo{display:flex;flex-direction:column;gap:3px}
+.sname{font-size:var(--sm);font-weight:500}
+.sdesc{font-size:var(--xs);color:var(--txm);max-width:40ch}
 .toggle{position:relative;width:34px;height:19px;flex-shrink:0}
 .toggle input{opacity:0;width:0;height:0}
 .toggle-sl{position:absolute;inset:0;background:var(--sfd);border-radius:var(--rf);cursor:pointer;transition:background var(--tr)}
@@ -192,46 +154,25 @@ ul{list-style:none}
 .toggle input:checked+.toggle-sl{background:var(--p)}
 .toggle input:checked+.toggle-sl::before{transform:translateX(15px)}
 
-.srow{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--div)}
-.srow:last-child{border-bottom:none}
-.sinfo{display:flex;flex-direction:column;gap:3px}
-.sname{font-size:var(--sm);font-weight:500}
-.sdesc{font-size:var(--xs);color:var(--txm);max-width:40ch}
 code{font-family:var(--fm);font-size:10px;background:var(--sfd);padding:1px 5px;border-radius:3px}
-
-.search-wrap{position:relative}
-.search-wrap i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--txm);width:14px;height:14px;pointer-events:none}
-.search-in{background:var(--sfo);border:1px solid var(--bdr);border-radius:var(--r1);padding:.375rem .75rem .375rem 2rem;font-size:var(--sm);color:var(--tx);width:210px}
-.search-in:focus{outline:2px solid var(--p);outline-offset:2px}
 
 #toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;display:flex;flex-direction:column;gap:.5rem;pointer-events:none}
 
-/* DELETE BTN red tint icon */
-.btn-del{color:var(--er);padding:.25rem;border-radius:var(--r0)}.btn-del:hover{background:var(--erhl)}
-.btn-del i{width:13px;height:13px}
+/* ADD GAME FORM */
+.add-game-form{display:none;padding:1.25rem;background:var(--sfo);border-top:1px solid var(--div)}
+.add-game-form.open{display:block}
 
-/* REMOVE MODAL specifics */
-.rm-choice{display:flex;flex-direction:column;gap:.75rem;margin-top:.5rem}
-.rm-opt{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem 1rem;border-radius:var(--r1);border:1px solid var(--bdr);cursor:pointer;transition:border-color var(--tr),background var(--tr)}
-.rm-opt:hover{background:var(--sfd)}
-.rm-opt.selected{border-color:var(--er);background:var(--erhl)}
-.rm-opt input{margin-top:3px;flex-shrink:0;accent-color:var(--er)}
-.rm-opt-info{display:flex;flex-direction:column;gap:3px}
-.rm-opt-name{font-size:var(--sm);font-weight:500}
-.rm-opt-desc{font-size:var(--xs);color:var(--txm)}
-
+.menu-btn{display:none}
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%);transition:transform var(--tr)}
   .sidebar.open{transform:translateX(0)}
   .main{margin-left:0}
   .form-row{grid-template-columns:1fr}
-  .kpi-grid{grid-template-columns:1fr 1fr}
   .page{padding:1rem}
   .topbar{padding:.75rem 1rem}
   .gpath{display:none}
+  .menu-btn{display:flex}
 }
-.menu-btn{display:none}
-@media(max-width:768px){.menu-btn{display:flex}}
 </style>
 </head>
 <body>
@@ -245,257 +186,253 @@ code{font-family:var(--fm);font-size:10px;background:var(--sfd);padding:1px 5px;
       <circle cx="3" cy="13" r="1.5" fill="currentColor" opacity=".4"/>
       <circle cx="23" cy="13" r="1.5" fill="currentColor" opacity=".4"/>
     </svg>
-    <div><div class="logo-text">SaveSync</div><div class="logo-sub">Ludusavi v0.31.0</div></div>
+    <div><div class="logo-text">SaveSync</div><div class="logo-sub">Command Helper</div></div>
   </div>
   <nav class="nav">
     <div class="nav-label">Main</div>
-    <div class="nav-item active" onclick="go('games')"><i data-lucide="gamepad-2"></i> Games</div>
-    <div class="nav-item" onclick="go('log')"><i data-lucide="activity"></i> Log</div>
+    <div class="nav-item active" onclick="go('games')"><i data-lucide="gamepad-2"></i> My Games</div>
+    <div class="nav-item" onclick="go('bulk')"><i data-lucide="layers"></i> Bulk Commands</div>
     <div class="nav-label">Setup</div>
-    <div class="nav-item" onclick="go('settings')"><i data-lucide="settings"></i> Settings</div>
-    <div class="nav-item" onclick="go('setup-guide')"><i data-lucide="book-open"></i> Setup Guide</div>
+    <div class="nav-item" onclick="go('settings')"><i data-lucide="settings"></i> SMB Config</div>
+    <div class="nav-item" onclick="go('guide')"><i data-lucide="book-open"></i> Setup Guide</div>
   </nav>
-  <div class="smb-widget">
-    <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--txf);margin-bottom:.5rem">SMB Share</div>
-    <div class="smb-row"><div class="dot dot-g" id="smb-dot"></div><span id="smb-label" style="font-family:var(--fm);font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">\\NAS\GameSaves\ludusavi</span></div>
-    <div style="font-size:10px;color:var(--txf);margin-top:4px" id="smb-st">Connected · rclone SMB</div>
+  <div style="padding:.75rem .75rem;margin:.5rem;background:var(--wahl);border-radius:var(--r1);border:1px solid color-mix(in oklch,var(--wa) 30%,transparent)">
+    <div style="font-size:10px;font-weight:600;color:var(--wa);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">UI Only</div>
+    <div style="font-size:10px;color:var(--txm);line-height:1.5">This tool generates commands. Run them in Ludusavi or a terminal — nothing executes here.</div>
   </div>
   <div class="sidebar-footer">
-    <div style="font-size:var(--xs);color:var(--txm)">dashboard v2.1</div>
+    <div style="font-size:var(--xs);color:var(--txm)">v3.0</div>
     <button class="btn-ic" data-theme-toggle aria-label="Toggle theme">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     </button>
   </div>
 </aside>
 
-<div class="main" id="main">
+<div class="main">
   <header class="topbar">
     <button class="btn btn-ic menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')"><i data-lucide="menu"></i></button>
-    <div class="topbar-title" id="topbar-title">Games</div>
-    <div class="topbar-actions">
-      <button class="btn btn-g btn-sm" onclick="selectAll()" id="sel-all-btn"><i data-lucide="check-square"></i> Select All</button>
-      <button class="btn btn-ok btn-sm" onclick="runBulk('backup')" id="bulk-bk" disabled><i data-lucide="upload-cloud"></i> Backup Selected</button>
-      <button class="btn btn-bl btn-sm" onclick="runBulk('restore')" id="bulk-rs" disabled><i data-lucide="download-cloud"></i> Restore Selected</button>
+    <div class="topbar-title" id="topbar-title">My Games</div>
+    <div style="display:flex;gap:.5rem">
+      <button class="btn btn-g btn-sm" onclick="go('bulk')"><i data-lucide="layers"></i> Bulk commands</button>
     </div>
   </header>
 
   <!-- GAMES PAGE -->
   <div class="page active" id="page-games">
-    <div class="kpi-grid">
-      <div class="kpi"><div class="kpi-l">Total Games</div><div class="kpi-v" id="k-total">15</div><div class="kpi-s">tracked</div></div>
-      <div class="kpi"><div class="kpi-l">Selected</div><div class="kpi-v" id="k-sel" style="color:var(--p)">0</div><div class="kpi-s">ready to sync</div></div>
-      <div class="kpi"><div class="kpi-l">Backed Up</div><div class="kpi-v" id="k-ok" style="color:var(--ok)">8</div><div class="kpi-s">on SMB share</div></div>
-      <div class="kpi"><div class="kpi-l">Last Op</div><div class="kpi-v" style="font-size:var(--lg)" id="k-last">—</div><div class="kpi-s" id="k-last-s">no ops yet</div></div>
-    </div>
 
-    <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
-      <div class="search-wrap">
-        <i data-lucide="search"></i>
-        <input class="search-in" id="srch" placeholder="Search games…" oninput="renderGames()">
-      </div>
-      <select class="fi" id="flt" onchange="renderGames()" style="width:auto;font-size:var(--xs)">
-        <option value="all">All</option>
-        <option value="ok">Backed up</option>
-        <option value="never">Never backed up</option>
-        <option value="stale">Stale</option>
-      </select>
-      <button class="btn btn-g btn-sm" onclick="clearSel()"><i data-lucide="x-square"></i> Clear</button>
-    </div>
-
-    <div class="sel-bar" id="sel-bar" style="display:none">
-      <i data-lucide="check-square"></i>
-      <span id="sel-lbl">0 games selected</span>
-      <div style="display:flex;gap:.5rem;margin-left:auto">
-        <button class="btn btn-ok btn-sm" onclick="runBulk('backup')"><i data-lucide="upload-cloud"></i> Backup</button>
-        <button class="btn btn-bl btn-sm" onclick="runBulk('restore')"><i data-lucide="download-cloud"></i> Restore</button>
-      </div>
-    </div>
-
-    <div id="prog-wrap" style="display:none">
-      <div style="display:flex;justify-content:space-between;font-size:var(--xs);color:var(--txm);margin-bottom:.5rem">
-        <span id="prog-lbl">Running…</span><span id="prog-pct">0%</span>
-      </div>
-      <div class="progress-wrap"><div class="progress-fill" id="prog-fill"></div></div>
+    <div class="callout cl-wa">
+      <i data-lucide="alert-triangle"></i>
+      <div><strong>This dashboard does not run anything.</strong> It generates the exact Ludusavi / rclone commands you need to copy and run yourself — in Ludusavi's GUI, a terminal, or a batch script. Nothing is "backed up" or "restored" until you actually run the commands.</div>
     </div>
 
     <div class="card">
       <div class="card-hdr">
-        <div class="card-title">Detected Games</div>
-        <button class="btn btn-g btn-sm" onclick="rescan()"><i data-lucide="refresh-cw"></i> Rescan</button>
+        <div class="card-title">Tracked Games <span id="game-count" style="font-weight:400;color:var(--txm);font-size:var(--xs)">— 0 games</span></div>
+        <button class="btn btn-p btn-sm" onclick="toggleAddForm()"><i data-lucide="plus"></i> Add Game</button>
       </div>
-      <table class="gt">
+
+      <!-- ADD GAME INLINE FORM -->
+      <div class="add-game-form" id="add-form">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+          <div class="fg"><label class="fl">Game Name <span style="color:var(--er)">*</span></label><input class="fi" id="new-name" placeholder="Elden Ring"></div>
+          <div class="fg"><label class="fl">Local Save Path <span style="color:var(--er)">*</span></label><input class="fi mo" id="new-path" placeholder="%APPDATA%\EldenRing\"></div>
+        </div>
+        <div style="display:flex;gap:.5rem;justify-content:flex-end">
+          <button class="btn btn-g btn-sm" onclick="toggleAddForm()">Cancel</button>
+          <button class="btn btn-p btn-sm" onclick="addGame()"><i data-lucide="plus"></i> Add</button>
+        </div>
+      </div>
+
+      <table class="gt" id="game-table">
         <thead>
           <tr>
-            <th><input type="checkbox" class="cb" id="hdr-cb" onchange="toggleAll(this.checked)"></th>
+            <th style="width:36px"><input type="checkbox" class="cb" id="hdr-cb" onchange="toggleAll(this.checked)"></th>
             <th>Game</th>
-            <th>Status</th>
-            <th>Last Backup</th>
-            <th>Size</th>
-            <th style="text-align:right;padding-right:1.25rem">Actions</th>
+            <th style="text-align:right;padding-right:1.25rem">Commands</th>
           </tr>
         </thead>
         <tbody id="tbody"></tbody>
       </table>
+
+      <div id="empty-state" style="display:none;padding:3rem;text-align:center;color:var(--txm)">
+        <i data-lucide="gamepad-2" style="width:32px;height:32px;margin:0 auto 1rem;display:block;color:var(--txf)"></i>
+        <div style="font-size:var(--sm);margin-bottom:.5rem">No games tracked yet</div>
+        <div style="font-size:var(--xs)">Click <strong>Add Game</strong> to add your first game's save path.</div>
+      </div>
     </div>
   </div>
 
-  <!-- LOG PAGE -->
-  <div class="page" id="page-log">
-    <div class="callout cl-info">
-      <i data-lucide="info"></i>
-      <div><strong>Diagnostic logging</strong> — each entry shows the exact Ludusavi and rclone commands run, files transferred, bytes moved, and any errors. If a backup shows success but nothing appears on the share, check the command and stderr output in the entry below.</div>
-    </div>
+  <!-- BULK PAGE -->
+  <div class="page" id="page-bulk">
+    <div class="callout cl-info"><i data-lucide="info"></i><div>Copy these commands and run them in a terminal or save as a <code>.bat</code> file. Each command runs against all games tracked in this helper. Edit the SMB Config tab to update the remote name and path.</div></div>
+
     <div class="card">
-      <div class="card-hdr">
-        <div class="card-title">Operation Log</div>
-        <div style="display:flex;gap:.5rem">
-          <button class="btn btn-g btn-sm" onclick="exportLog()"><i data-lucide="download"></i> Export</button>
-          <button class="btn btn-g btn-sm" onclick="clearLog()"><i data-lucide="trash-2"></i> Clear</button>
+      <div class="card-hdr"><div class="card-title">Backup All Games</div></div>
+      <div style="padding:1.25rem;display:flex;flex-direction:column;gap:.75rem">
+        <div style="font-size:var(--xs);color:var(--txm);line-height:1.7">Backs up all game saves to the local Ludusavi staging folder, then uploads to the SMB share. Run both commands in sequence.</div>
+        <div class="cmd-block">
+          <pre id="cmd-backup-all"></pre>
+          <button class="copy-btn" onclick="copyEl('cmd-backup-all')" title="Copy"><i data-lucide="copy"></i></button>
         </div>
       </div>
-      <div class="log-wrap" id="log-body"><div style="padding:3rem;text-align:center;color:var(--txm);font-size:var(--xs)">No operations yet — run a backup or restore.</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-title">Restore All Games</div></div>
+      <div style="padding:1.25rem;display:flex;flex-direction:column;gap:.75rem">
+        <div style="font-size:var(--xs);color:var(--txm);line-height:1.7">Downloads from the SMB share to local staging, then restores all games. <strong>Local saves will be overwritten.</strong></div>
+        <div class="cmd-block">
+          <pre id="cmd-restore-all"></pre>
+          <button class="copy-btn" onclick="copyEl('cmd-restore-all')" title="Copy"><i data-lucide="copy"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-title">Verify SMB Connection</div></div>
+      <div style="padding:1.25rem;display:flex;flex-direction:column;gap:.75rem">
+        <div style="font-size:var(--xs);color:var(--txm);line-height:1.7">Run this first to confirm rclone can reach your share before trusting backup results.</div>
+        <div class="cmd-block">
+          <pre id="cmd-verify"></pre>
+          <button class="copy-btn" onclick="copyEl('cmd-verify')" title="Copy"><i data-lucide="copy"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><div class="card-title">Batch Script (.bat)</div></div>
+      <div style="padding:1.25rem;display:flex;flex-direction:column;gap:.75rem">
+        <div style="font-size:var(--xs);color:var(--txm);line-height:1.7">Save this as <code>backup-saves.bat</code> and run it after gaming sessions. Includes verification and logging.</div>
+        <div class="cmd-block">
+          <pre id="cmd-bat" style="font-size:10px"></pre>
+          <button class="copy-btn" onclick="copyEl('cmd-bat')" title="Copy"><i data-lucide="copy"></i></button>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- SETTINGS PAGE -->
   <div class="page" id="page-settings">
-    <div class="callout cl-info"><i data-lucide="info"></i><div>Settings map to Ludusavi's <code>config.yaml</code> and the rclone SMB remote. The generated config block below can be pasted directly into your <code>rclone.conf</code>.</div></div>
+    <div class="callout cl-info"><i data-lucide="info"></i><div>Configure your SMB share details here. These values are used to generate the correct rclone config and Ludusavi commands throughout the tool. Nothing is sent or saved to a server — all data stays in your browser.</div></div>
 
-    <div class="card" style="max-width:660px">
-      <div class="card-hdr"><div class="card-title">SMB Share (rclone)</div></div>
+    <div class="card" style="max-width:640px">
+      <div class="card-hdr"><div class="card-title">rclone Remote (SMB)</div></div>
       <div class="form-body">
         <div class="form-row">
-          <div class="fg"><label class="fl">Share Host / IP</label><input class="fi mo" id="s-host" value="192.168.1.50"></div>
-          <div class="fg"><label class="fl">Share Name</label><input class="fi mo" id="s-share" value="GameSaves"></div>
+          <div class="fg"><label class="fl">Remote Name (in rclone)</label><input class="fi mo" id="s-remote" value="nas" oninput="refreshAll()"></div>
+          <div class="fg"><label class="fl">Share Host / IP</label><input class="fi mo" id="s-host" value="192.168.1.50" oninput="refreshAll()"></div>
         </div>
         <div class="form-row">
-          <div class="fg"><label class="fl">Username</label><input class="fi" id="s-user" value="sage"></div>
-          <div class="fg"><label class="fl">Password</label><input class="fi" id="s-pass" type="password" placeholder="SMB password"></div>
+          <div class="fg"><label class="fl">Share Name</label><input class="fi mo" id="s-share" value="GameSaves" oninput="refreshAll()"></div>
+          <div class="fg"><label class="fl">Subfolder</label><input class="fi mo" id="s-sub" value="ludusavi" oninput="refreshAll()"></div>
         </div>
-        <div class="fg full">
-          <label class="fl">Subfolder on Share</label>
-          <input class="fi mo" id="s-sub" value="ludusavi">
-          <div class="fh">Full path: <code id="s-preview-path">\\192.168.1.50\GameSaves\ludusavi</code></div>
+        <div class="form-row">
+          <div class="fg"><label class="fl">SMB Username</label><input class="fi" id="s-user" value="sage" oninput="refreshAll()"></div>
+          <div class="fg"><label class="fl">rclone Executable Path</label><input class="fi mo" id="s-rclone" value="rclone" oninput="refreshAll()"></div>
         </div>
-        <div class="fg full">
-          <label class="fl">rclone Executable</label>
-          <input class="fi mo" id="s-rclone" value="C:\tools\rclone\rclone.exe">
-          <div class="fh">Download from <strong>rclone.org</strong>. Must be v1.62.2+. Ludusavi calls this binary for all cloud transfers.</div>
-        </div>
-      </div>
-      <div class="card-ftr">
-        <button class="btn btn-g btn-sm" onclick="testSmb()"><i data-lucide="plug"></i> Test Connection</button>
-        <button class="btn btn-p btn-sm" onclick="saveSettings()"><i data-lucide="save"></i> Save</button>
       </div>
     </div>
 
-    <div class="card" style="max-width:660px">
-      <div class="card-hdr"><div class="card-title">Generated rclone Config</div></div>
+    <div class="card" style="max-width:640px">
+      <div class="card-hdr"><div class="card-title">Generated rclone.conf Block</div><button class="btn btn-g btn-sm" onclick="copyEl('rclone-cfg')"><i data-lucide="copy"></i> Copy</button></div>
       <div style="padding:1.25rem">
-        <pre id="rclone-cfg" style="font-family:var(--fm);font-size:11px;color:var(--tx);background:var(--sfo);padding:1rem;border-radius:var(--r1);border:1px solid var(--bdr);overflow-x:auto;line-height:1.8"></pre>
-        <div style="margin-top:.75rem;display:flex;justify-content:flex-end;gap:.5rem">
-          <button class="btn btn-g btn-sm" onclick="copyConfig()"><i data-lucide="copy"></i> Copy</button>
-        </div>
+        <pre id="rclone-cfg" style="font-family:var(--fm);font-size:11px;color:var(--tx);background:var(--sfo);padding:1rem;border-radius:var(--r1);border:1px solid var(--bdr);overflow-x:auto;line-height:1.8;white-space:pre-wrap"></pre>
+        <div style="font-size:var(--xs);color:var(--txf);margin-top:.75rem">Paste into <code>%APPDATA%\rclone\rclone.conf</code> (Windows) or <code>~/.config/rclone/rclone.conf</code> (Linux).</div>
       </div>
     </div>
 
-    <div class="card" style="max-width:660px">
-      <div class="card-hdr"><div class="card-title">Backup Behaviour</div></div>
-      <div>
-        <div class="srow"><div class="sinfo"><div class="sname">Versions to keep</div><div class="sdesc">Older backups retained per game on share</div></div><select class="fi" style="width:70px"><option>3</option><option selected>5</option><option>10</option></select></div>
-        <div class="srow"><div class="sinfo"><div class="sname">Compress saves (ZIP)</div><div class="sdesc">Zip before upload — smaller files on share</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-sl"></span></label></div>
-        <div class="srow"><div class="sinfo"><div class="sname">Confirm before restore</div><div class="sdesc">Prompt before overwriting local saves</div></div><label class="toggle"><input type="checkbox" checked><span class="toggle-sl"></span></label></div>
+    <div class="card" style="max-width:640px">
+      <div class="card-hdr"><div class="card-title">Ludusavi config.yaml (cloud section)</div><button class="btn btn-g btn-sm" onclick="copyEl('ludusavi-cfg')"><i data-lucide="copy"></i> Copy</button></div>
+      <div style="padding:1.25rem">
+        <pre id="ludusavi-cfg" style="font-family:var(--fm);font-size:11px;color:var(--tx);background:var(--sfo);padding:1rem;border-radius:var(--r1);border:1px solid var(--bdr);overflow-x:auto;line-height:1.8;white-space:pre-wrap"></pre>
+        <div style="font-size:var(--xs);color:var(--txf);margin-top:.75rem">In Ludusavi GUI: <strong>Other → Cloud</strong> — set remote to <code id="s-remote-preview">nas</code> and path to the subfolder shown above.</div>
       </div>
     </div>
   </div>
 
-  <!-- SETUP GUIDE -->
-  <div class="page" id="page-setup-guide">
+  <!-- GUIDE PAGE -->
+  <div class="page" id="page-guide">
     <div class="card" style="max-width:700px">
-      <div class="card-hdr"><div class="card-title">Setup Guide — SMB + Ludusavi</div></div>
+      <div class="card-hdr"><div class="card-title">Setup Guide — Ludusavi + rclone SMB</div></div>
       <div style="padding:1.5rem;display:flex;flex-direction:column;gap:1.5rem">
-        <div class="callout cl-wa"><i data-lucide="alert-triangle"></i><div><strong>Dashboard is UI-only.</strong> This dashboard visualises operations but does not directly invoke Ludusavi or rclone. Backups shown as "success" here simulate the workflow — real file transfers happen through Ludusavi's GUI or CLI. See Step 5 for how to wire them together.</div></div>
+
+        <div class="callout cl-er">
+          <i data-lucide="x-circle"></i>
+          <div><strong>Why did backups show "success" but nothing appeared on your share?</strong><br>
+          The previous version of this dashboard faked all data — pre-seeded game lists, fake log entries, fake "Backed up" statuses, fake file transfers. None of it was real. This version (v3) shows no fake data. It only generates commands for you to run.</div>
+        </div>
 
         <div style="display:flex;flex-direction:column;gap:1.25rem">
+
           <div style="display:flex;gap:1rem;align-items:flex-start">
             <div style="background:var(--phl);color:var(--p);border-radius:var(--rf);width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:var(--xs)">1</div>
-            <div><div style="font-weight:600;font-size:var(--sm);margin-bottom:.25rem">Install rclone</div><div style="font-size:var(--xs);color:var(--txm);line-height:1.7">Download <code>rclone.exe</code> from <strong>rclone.org/downloads</strong>. Place it at <code>C:\tools\rclone\rclone.exe</code> or anywhere on your PATH.</div></div>
+            <div><div style="font-weight:600;font-size:var(--sm);margin-bottom:.25rem">Install rclone</div>
+            <div style="font-size:var(--xs);color:var(--txm);line-height:1.7">Download from <strong>rclone.org/downloads</strong>. Extract <code>rclone.exe</code> to a folder on your PATH (e.g. <code>C:\tools\rclone\</code>). Verify with:</div>
+            <div class="cmd-block" style="margin-top:.5rem"><pre>rclone version</pre><button class="copy-btn" onclick="copyText('rclone version')" title="Copy"><i data-lucide="copy"></i></button></div></div>
           </div>
+
           <div style="display:flex;gap:1rem;align-items:flex-start">
             <div style="background:var(--phl);color:var(--p);border-radius:var(--rf);width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:var(--xs)">2</div>
-            <div><div style="font-weight:600;font-size:var(--sm);margin-bottom:.25rem">Configure SMB remote in rclone</div><div style="font-size:var(--xs);color:var(--txm);line-height:1.7">Run once in a terminal. Or use Ludusavi's built-in wizard: <strong>Other → Cloud → Add → SMB server</strong>.</div>
-            <pre style="font-family:var(--fm);font-size:10px;background:var(--sfo);border:1px solid var(--bdr);border-radius:var(--r1);padding:.625rem;margin-top:.5rem;line-height:1.7;overflow-x:auto">rclone config
-# → New remote → name it "nas" → type: smb
+            <div><div style="font-weight:600;font-size:var(--sm);margin-bottom:.25rem">Create the SMB remote in rclone</div>
+            <div style="font-size:var(--xs);color:var(--txm);line-height:1.7">Run interactively. Name it <code>nas</code> (or update SMB Config to match whatever name you choose).</div>
+            <div class="cmd-block" style="margin-top:.5rem"><pre>rclone config
+# → n (new remote)
+# → name: nas
+# → type: smb
 # → host: 192.168.1.50
 # → user: sage
-# → password: (enter when prompted)
-# → leave other fields blank → quit</pre></div>
+# → pass: (enter when prompted, or leave blank for guest)
+# → leave all other fields blank → q to quit</pre><button class="copy-btn" onclick="copyText('rclone config')" title="Copy"><i data-lucide="copy"></i></button></div></div>
           </div>
+
           <div style="display:flex;gap:1rem;align-items:flex-start">
             <div style="background:var(--phl);color:var(--p);border-radius:var(--rf);width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:var(--xs)">3</div>
-            <div><div style="font-weight:600;font-size:var(--sm);margin-bottom:.25rem">Point Ludusavi at the rclone remote</div><div style="font-size:var(--xs);color:var(--txm);line-height:1.7">In Ludusavi GUI: <strong>Other tab → Cloud section</strong> → select remote <code>nas</code>, set path to <code>GameSaves/ludusavi</code>. Set rclone executable path. Turn <strong>off</strong> auto-sync (manual only).</div>
-            <pre style="font-family:var(--fm);font-size:10px;background:var(--sfo);border:1px solid var(--bdr);border-radius:var(--r1);padding:.625rem;margin-top:.5rem;line-height:1.7;overflow-x:auto"># config.yaml (cloud section)
-cloud:
-  remote:
-    type: Smb
-    id: nas
-  path: "GameSaves/ludusavi"
-  synchronize: false   # ← manual only, never auto</pre></div>
+            <div><div style="font-weight:600;font-size:var(--sm);margin-bottom:.25rem">Verify rclone can see the share</div>
+            <div style="font-size:var(--xs);color:var(--txm);line-height:1.7">This is the most important test. If this fails, nothing else will work.</div>
+            <div class="cmd-block" style="margin-top:.5rem"><pre id="guide-verify"></pre><button class="copy-btn" onclick="copyEl('guide-verify')" title="Copy"><i data-lucide="copy"></i></button></div>
+            <div style="font-size:var(--xs);color:var(--txm);margin-top:.5rem;line-height:1.7">Expected output: a list of folders on the share, or an empty result (not an error). If you get an error, fix the host/credentials before continuing.</div></div>
           </div>
+
           <div style="display:flex;gap:1rem;align-items:flex-start">
             <div style="background:var(--phl);color:var(--p);border-radius:var(--rf);width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:var(--xs)">4</div>
-            <div><div style="font-weight:600;font-size:var(--sm);margin-bottom:.25rem">Verify rclone can reach the share</div><div style="font-size:var(--xs);color:var(--txm);line-height:1.7">Test before relying on it — rclone will fail silently if credentials are wrong or the share is unreachable.</div>
-            <pre style="font-family:var(--fm);font-size:10px;background:var(--sfo);border:1px solid var(--bdr);border-radius:var(--r1);padding:.625rem;margin-top:.5rem;line-height:1.7;overflow-x:auto"># Should list files/folders on the share:
-rclone ls nas:GameSaves/ludusavi
-
-# If empty share, just check it mounts:
-rclone lsd nas:</pre></div>
+            <div><div style="font-weight:600;font-size:var(--sm);margin-bottom:.25rem">Set rclone path in Ludusavi</div>
+            <div style="font-size:var(--xs);color:var(--txm);line-height:1.7">In Ludusavi: <strong>Other tab → Rclone executable</strong> → point it to <code>rclone.exe</code>. Then: <strong>Other → Cloud → Add → SMB</strong> → enter your remote name (e.g. <code>nas</code>) and path (e.g. <code>GameSaves/ludusavi</code>). Turn <strong>off</strong> auto-sync.</div></div>
           </div>
+
           <div style="display:flex;gap:1rem;align-items:flex-start">
             <div style="background:var(--phl);color:var(--p);border-radius:var(--rf);width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:var(--xs)">5</div>
-            <div><div style="font-weight:600;font-size:var(--sm);margin-bottom:.25rem">Manual backup / restore workflow</div><div style="font-size:var(--xs);color:var(--txm);line-height:1.7">Use Ludusavi GUI (three-dot menu per game → Backup/Restore), or CLI for scripting. The cloud upload/download step is what actually moves files to/from the share.</div>
-            <pre style="font-family:var(--fm);font-size:10px;background:var(--sfo);border:1px solid var(--bdr);border-radius:var(--r1);padding:.625rem;margin-top:.5rem;line-height:1.7;overflow-x:auto"># BACKUP a game to local staging, then push to SMB share:
-ludusavi backup --force "Elden Ring"
-ludusavi cloud upload
-
-# RESTORE from SMB share to local saves:
-ludusavi cloud download
-ludusavi restore --force "Elden Ring"
-
-# Check what would sync (dry run):
-ludusavi backup "Elden Ring"    # no --force = preview only
-
-# See verbose rclone output for debugging:
-ludusavi cloud upload --verbose</pre></div>
+            <div><div style="font-weight:600;font-size:var(--sm);margin-bottom:.25rem">Understand the two-step backup process</div>
+            <div style="font-size:var(--xs);color:var(--txm);line-height:1.7"><strong>Critical:</strong> <code>ludusavi backup</code> only copies saves to a <em>local staging folder</em> on your PC. The files do NOT go to the SMB share yet. You must then run <code>ludusavi cloud upload</code> as a separate step to push them.</div>
+            <div class="cmd-block" style="margin-top:.5rem"><pre id="guide-backup-eg"></pre><button class="copy-btn" onclick="copyEl('guide-backup-eg')" title="Copy"><i data-lucide="copy"></i></button></div></div>
           </div>
+
           <div style="display:flex;gap:1rem;align-items:flex-start">
             <div style="background:var(--phl);color:var(--p);border-radius:var(--rf);width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:var(--xs)">6</div>
-            <div><div style="font-weight:600;font-size:var(--sm);margin-bottom:.25rem">Debugging: nothing appears on share</div>
-            <div style="font-size:var(--xs);color:var(--txm);line-height:1.7">Common causes — check each:</div>
-            <div style="margin-top:.5rem;display:flex;flex-direction:column;gap:.375rem">
-              <div style="font-size:var(--xs);display:flex;gap:.5rem"><span style="color:var(--wa);font-weight:600;flex-shrink:0">①</span><span><strong>cloud upload not run</strong> — <code>ludusavi backup</code> only writes to a local staging folder (<code>~/ludusavi-backup/</code>). You must also run <code>ludusavi cloud upload</code> to push to the share.</span></div>
-              <div style="font-size:var(--xs);display:flex;gap:.5rem"><span style="color:var(--wa);font-weight:600;flex-shrink:0">②</span><span><strong>wrong rclone path</strong> — verify Ludusavi's rclone executable setting points to the actual binary. Run <code>rclone version</code> at that path to confirm.</span></div>
-              <div style="font-size:var(--xs);display:flex;gap:.5rem"><span style="color:var(--wa);font-weight:600;flex-shrink:0">③</span><span><strong>remote not configured</strong> — run <code>rclone listremotes</code> to confirm <code>nas:</code> exists. If not, re-run <code>rclone config</code>.</span></div>
-              <div style="font-size:var(--xs);display:flex;gap:.5rem"><span style="color:var(--wa);font-weight:600;flex-shrink:0">④</span><span><strong>path mismatch</strong> — the <code>path</code> in Ludusavi's cloud config must match a folder that actually exists on the share, or rclone must have permission to create it.</span></div>
-              <div style="font-size:var(--xs);display:flex;gap:.5rem"><span style="color:var(--wa);font-weight:600;flex-shrink:0">⑤</span><span><strong>game not scanned</strong> — Ludusavi must detect the game's save path first. Do a full scan from the Backup tab, then use the per-game menu.</span></div>
-            </div>
+            <div><div style="font-weight:600;font-size:var(--sm);margin-bottom:.25rem">Troubleshooting: nothing on share</div>
+            <div style="font-size:var(--xs);color:var(--txm);line-height:1.7;margin-bottom:.5rem">Work through these in order:</div>
+            <div style="display:flex;flex-direction:column;gap:.5rem">
+              <div style="font-size:var(--xs);display:flex;gap:.5rem;padding:.5rem .75rem;background:var(--sfo);border-radius:var(--r0)"><span style="color:var(--wa);font-weight:700;flex-shrink:0">①</span><span><strong>Did you run <code>cloud upload</code>?</strong> Backup alone does nothing on the share.</span></div>
+              <div style="font-size:var(--xs);display:flex;gap:.5rem;padding:.5rem .75rem;background:var(--sfo);border-radius:var(--r0)"><span style="color:var(--wa);font-weight:700;flex-shrink:0">②</span><span><strong>Test rclone directly:</strong> <code>rclone lsd nas:</code> — must return a listing, not an error.</span></div>
+              <div style="font-size:var(--xs);display:flex;gap:.5rem;padding:.5rem .75rem;background:var(--sfo);border-radius:var(--r0)"><span style="color:var(--wa);font-weight:700;flex-shrink:0">③</span><span><strong>Check Ludusavi's rclone path:</strong> Other tab → Rclone executable must point to the actual <code>rclone.exe</code> binary.</span></div>
+              <div style="font-size:var(--xs);display:flex;gap:.5rem;padding:.5rem .75rem;background:var(--sfo);border-radius:var(--r0)"><span style="color:var(--wa);font-weight:700;flex-shrink:0">④</span><span><strong>Check remote name:</strong> Run <code>rclone listremotes</code> — the name shown must match what Ludusavi has configured.</span></div>
+              <div style="font-size:var(--xs);display:flex;gap:.5rem;padding:.5rem .75rem;background:var(--sfo);border-radius:var(--r0)"><span style="color:var(--wa);font-weight:700;flex-shrink:0">⑤</span><span><strong>Check the subfolder exists</strong> or that rclone has write permission to create it.</span></div>
+              <div style="font-size:var(--xs);display:flex;gap:.5rem;padding:.5rem .75rem;background:var(--sfo);border-radius:var(--r0)"><span style="color:var(--wa);font-weight:700;flex-shrink:0">⑥</span><span><strong>Run with verbose output:</strong> <code>ludusavi cloud upload --verbose</code> — this shows exactly what rclone is doing and any errors it returns.</span></div>
             </div>
           </div>
+          </div>
+
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- CONFIRM MODAL -->
-<div class="overlay" id="modal-confirm">
+<!-- GAME COMMAND MODAL -->
+<div class="overlay" id="modal-cmd">
   <div class="modal">
-    <div class="modal-hdr"><div class="modal-title" id="mc-title">Confirm</div><button class="btn-ic" onclick="closeModal('modal-confirm')"><i data-lucide="x"></i></button></div>
+    <div class="modal-hdr"><div class="modal-title" id="mc-title">Commands</div><button class="btn-ic" onclick="closeModal('modal-cmd')"><i data-lucide="x"></i></button></div>
     <div class="modal-body" id="mc-body"></div>
-    <div class="modal-ftr">
-      <button class="btn btn-g" onclick="closeModal('modal-confirm')">Cancel</button>
-      <button class="btn" id="mc-ok" onclick="confirmOp()">Continue</button>
-    </div>
+    <div class="modal-ftr"><button class="btn btn-g" onclick="closeModal('modal-cmd')">Close</button></div>
   </div>
 </div>
 
@@ -516,33 +453,26 @@ ludusavi cloud upload --verbose</pre></div>
 <script>
 lucide.createIcons();
 
-// ── STATE ────────────────────────────────────────────────────────
-const GAMES = [
-  {id:1,name:'Elden Ring',path:'%APPDATA%\\EldenRing\\',status:'ok',lastBackup:'2026-06-02 14:08',size:'1.2 MB',smb:'\\\\NAS\\GameSaves\\ludusavi\\Elden Ring\\'},
-  {id:2,name:'Hollow Knight',path:'%APPDATA%\\Hollow Knight\\',status:'ok',lastBackup:'2026-06-02 11:30',size:'420 KB',smb:'\\\\NAS\\GameSaves\\ludusavi\\Hollow Knight\\'},
-  {id:3,name:'Cyberpunk 2077',path:'%USERPROFILE%\\Saved Games\\CD Projekt Red\\',status:'stale',lastBackup:'2026-05-30 22:00',size:'8.7 MB',smb:'\\\\NAS\\GameSaves\\ludusavi\\Cyberpunk 2077\\'},
-  {id:4,name:"Baldur's Gate 3",path:'%LOCALAPPDATA%\\Larian Studios\\Baldur\'s Gate 3\\',status:'never',lastBackup:null,size:'14.1 MB',smb:null},
-  {id:5,name:'Stardew Valley',path:'%APPDATA%\\StardewValley\\Saves\\',status:'ok',lastBackup:'2026-06-02 09:15',size:'2.3 MB',smb:'\\\\NAS\\GameSaves\\ludusavi\\Stardew Valley\\'},
-  {id:6,name:'Hades',path:'%USERPROFILE%\\Saved Games\\Supergiant Games\\Hades\\',status:'ok',lastBackup:'2026-06-01 20:44',size:'640 KB',smb:'\\\\NAS\\GameSaves\\ludusavi\\Hades\\'},
-  {id:7,name:'Disco Elysium',path:'%APPDATA%\\ZA\\Disco Elysium\\',status:'stale',lastBackup:'2026-05-25 15:10',size:'890 KB',smb:'\\\\NAS\\GameSaves\\ludusavi\\Disco Elysium\\'},
-  {id:8,name:'The Witcher 3',path:'%USERPROFILE%\\Documents\\The Witcher 3\\gamesaves\\',status:'ok',lastBackup:'2026-05-28 12:00',size:'5.6 MB',smb:'\\\\NAS\\GameSaves\\ludusavi\\The Witcher 3\\'},
-  {id:9,name:'Deep Rock Galactic',path:'%LOCALAPPDATA%\\FSD\\Saved\\SaveGames\\',status:'never',lastBackup:null,size:'320 KB',smb:null},
-  {id:10,name:'Valheim',path:'%APPDATA%\\LocalLow\\IronGate\\Valheim\\worlds_local\\',status:'ok',lastBackup:'2026-06-01 17:30',size:'3.4 MB',smb:'\\\\NAS\\GameSaves\\ludusavi\\Valheim\\'},
-  {id:11,name:'RimWorld',path:'%APPDATA%\\LocalLow\\Ludeon Studios\\RimWorld\\Saves\\',status:'ok',lastBackup:'2026-05-29 21:00',size:'18.2 MB',smb:'\\\\NAS\\GameSaves\\ludusavi\\RimWorld\\'},
-  {id:12,name:'Terraria',path:'%USERPROFILE%\\Documents\\My Games\\Terraria\\Worlds\\',status:'stale',lastBackup:'2026-05-20 10:00',size:'1.8 MB',smb:'\\\\NAS\\GameSaves\\ludusavi\\Terraria\\'},
-  {id:13,name:'Celeste',path:'%APPDATA%\\Celeste\\',status:'never',lastBackup:null,size:'45 KB',smb:null},
-  {id:14,name:'Hades II',path:'%USERPROFILE%\\Saved Games\\Supergiant Games\\Hades2\\',status:'ok',lastBackup:'2026-06-02 13:00',size:'720 KB',smb:'\\\\NAS\\GameSaves\\ludusavi\\Hades II\\'},
-  {id:15,name:'Monster Hunter: World',path:'%APPDATA%\\MonsterHunterWorld\\',status:'never',lastBackup:null,size:'2.1 MB',smb:null},
-];
+// ── STATE — persisted to localStorage ─────────────────────────────
+let GAMES = JSON.parse(localStorage.getItem('savesync-games')||'[]');
+let pendingRemoveId = null;
+let removeMode = 'track';
 
-let LOG = [];
-let selected = new Set();
-let pendingOp = null;
-let pendingRemove = null;
-let removeMode = null; // 'local'|'smb'|'both'
+function save(){ localStorage.setItem('savesync-games', JSON.stringify(GAMES)); }
+
+function cfg(){
+  return {
+    remote: document.getElementById('s-remote')?.value.trim()||'nas',
+    host: document.getElementById('s-host')?.value.trim()||'192.168.1.50',
+    share: document.getElementById('s-share')?.value.trim()||'GameSaves',
+    sub: document.getElementById('s-sub')?.value.trim()||'ludusavi',
+    user: document.getElementById('s-user')?.value.trim()||'sage',
+    rclone: document.getElementById('s-rclone')?.value.trim()||'rclone',
+  };
+}
 
 // ── NAV ──────────────────────────────────────────────────────────
-const TITLES = {games:'Games',log:'Operation Log',settings:'Settings','setup-guide':'Setup Guide'};
+const TITLES = {games:'My Games',bulk:'Bulk Commands',settings:'SMB Config',guide:'Setup Guide'};
 function go(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -550,405 +480,201 @@ function go(id){
   document.querySelector(`.nav-item[onclick="go('${id}')"]`)?.classList.add('active');
   document.getElementById('topbar-title').textContent=TITLES[id]||id;
   document.getElementById('sidebar').classList.remove('open');
-  const isG=id==='games';
-  ['sel-all-btn','bulk-bk','bulk-rs'].forEach(b=>{const el=document.getElementById(b);if(el)el.style.display=isG?'':'none';});
-  if(id==='log') renderLog();
-  if(id==='settings') updateCfgPreview();
+  if(id==='bulk'||id==='settings'||id==='guide') refreshAll();
 }
 
-// ── BADGE ────────────────────────────────────────────────────────
-function badge(s){
-  if(s==='ok') return '<span class="badge b-ok"><i data-lucide="check-circle"></i> Backed up</span>';
-  if(s==='stale') return '<span class="badge b-wa"><i data-lucide="clock"></i> Stale</span>';
-  return '<span class="badge b-mu">Never backed up</span>';
-}
-
-// ── RENDER GAMES ─────────────────────────────────────────────────
+// ── GAMES ─────────────────────────────────────────────────────────
 function renderGames(){
-  const q=document.getElementById('srch').value.toLowerCase();
-  const f=document.getElementById('flt').value;
-  const visible=GAMES.filter(g=>{
-    const mq=!q||g.name.toLowerCase().includes(q);
-    const mf=f==='all'||(f==='ok'&&g.status==='ok')||(f==='never'&&g.status==='never')||(f==='stale'&&g.status==='stale');
-    return mq&&mf;
-  });
-
   const tbody=document.getElementById('tbody');
-  if(!visible.length){
-    tbody.innerHTML=`<tr><td colspan="6" style="text-align:center;padding:3rem;color:var(--txm);font-size:var(--xs)">No games match your filter.</td></tr>`;
-    lucide.createIcons();return;
-  }
-  tbody.innerHTML=visible.map(g=>`
-    <tr id="row-${g.id}">
-      <td><input type="checkbox" class="cb gcb" data-id="${g.id}" ${selected.has(g.id)?'checked':''} onchange="toggleGame(${g.id},this.checked)"></td>
+  const empty=document.getElementById('empty-state');
+  document.getElementById('game-count').textContent=`— ${GAMES.length} game${GAMES.length!==1?'s':''}`;
+
+  if(!GAMES.length){ tbody.innerHTML=''; empty.style.display='block'; lucide.createIcons(); return; }
+  empty.style.display='none';
+
+  const c=cfg();
+  tbody.innerHTML=GAMES.map(g=>`
+    <tr>
+      <td><input type="checkbox" class="cb gcb" data-id="${g.id}"></td>
       <td>
         <div class="gname">${g.name}</div>
         <div class="gpath">${g.path}</div>
       </td>
-      <td>${badge(g.status)}</td>
-      <td style="font-family:var(--fm);font-size:10px;color:var(--txm);white-space:nowrap">${g.lastBackup||'—'}</td>
-      <td style="color:var(--txm);font-variant-numeric:tabular-nums;white-space:nowrap">${g.size}</td>
       <td>
-        <div class="gacts" style="justify-content:flex-end">
-          <button class="btn btn-ok btn-sm" onclick="runSingle('backup',${g.id})" title="Backup to SMB share"><i data-lucide="upload-cloud"></i></button>
-          <button class="btn btn-bl btn-sm" onclick="runSingle('restore',${g.id})" title="Restore from SMB share"><i data-lucide="download-cloud"></i></button>
-          <div style="width:1px;height:20px;background:var(--div);margin:0 3px"></div>
-          <button class="btn btn-del" onclick="openRemove(${g.id})" title="Remove save / tracking">
-            <i data-lucide="trash-2"></i>
-          </button>
+        <div class="gacts">
+          <button class="btn btn-ok btn-sm" onclick="showCmds('backup','${g.id}')" title="Show backup commands"><i data-lucide="upload-cloud"></i> Backup cmds</button>
+          <button class="btn btn-bl btn-sm" onclick="showCmds('restore','${g.id}')" title="Show restore commands"><i data-lucide="download-cloud"></i> Restore cmds</button>
+          <div style="width:1px;height:20px;background:var(--div);margin:0 2px"></div>
+          <button class="btn btn-del" onclick="openRemove('${g.id}')" title="Remove from tracking"><i data-lucide="trash-2"></i></button>
         </div>
       </td>
     </tr>
   `).join('');
   lucide.createIcons();
-  updateKpis(visible);
 }
 
-function updateKpis(visible){
-  document.getElementById('k-total').textContent=GAMES.length;
-  document.getElementById('k-sel').textContent=selected.size;
-  document.getElementById('k-ok').textContent=GAMES.filter(g=>g.status==='ok').length;
-  const last=LOG[0];
-  if(last){
-    document.getElementById('k-last').textContent=last.time;
-    document.getElementById('k-last-s').textContent=last.op+' · '+last.game;
-  }
-  const has=selected.size>0;
-  document.getElementById('bulk-bk').disabled=!has;
-  document.getElementById('bulk-rs').disabled=!has;
-  document.getElementById('sel-bar').style.display=has?'flex':'none';
-  document.getElementById('sel-lbl').textContent=`${selected.size} game${selected.size!==1?'s':''} selected`;
-  const hcb=document.getElementById('hdr-cb');
-  hcb.checked=selected.size===GAMES.length;
-  hcb.indeterminate=selected.size>0&&selected.size<GAMES.length;
+function toggleAll(c){ document.querySelectorAll('.gcb').forEach(cb=>cb.checked=c); }
+
+function toggleAddForm(){
+  const f=document.getElementById('add-form');
+  f.classList.toggle('open');
+  if(f.classList.contains('open')) document.getElementById('new-name').focus();
 }
 
-function toggleGame(id,c){c?selected.add(id):selected.delete(id);updateKpis();}
-function toggleAll(c){GAMES.forEach(g=>c?selected.add(g.id):selected.delete(g.id));renderGames();}
-function selectAll(){GAMES.forEach(g=>selected.add(g.id));renderGames();}
-function clearSel(){selected.clear();document.getElementById('srch').value='';document.getElementById('flt').value='all';renderGames();}
+function addGame(){
+  const name=document.getElementById('new-name').value.trim();
+  const path=document.getElementById('new-path').value.trim();
+  if(!name||!path){ toast('Game name and path are required','warning'); return; }
+  if(GAMES.find(g=>g.name.toLowerCase()===name.toLowerCase())){ toast('Game already tracked','warning'); return; }
+  GAMES.push({ id: Date.now().toString(), name, path });
+  save();
+  document.getElementById('new-name').value='';
+  document.getElementById('new-path').value='';
+  document.getElementById('add-form').classList.remove('open');
+  renderGames();
+  toast(`${name} added`,'success');
+}
 
-// ── OPERATIONS ────────────────────────────────────────────────────
-function runSingle(op,id){
-  const g=GAMES.find(x=>x.id===id);
-  pendingOp={op,ids:[id]};
+// ── COMMAND MODAL ─────────────────────────────────────────────────
+function showCmds(op, gid){
+  const g=GAMES.find(x=>x.id===gid);
+  if(!g) return;
+  const c=cfg();
   const isR=op==='restore';
-  document.getElementById('mc-title').textContent=isR?'Confirm Restore':'Confirm Backup';
-  const host=document.getElementById('s-host')?.value||'192.168.1.50';
-  const share=document.getElementById('s-share')?.value||'GameSaves';
-  const sub=document.getElementById('s-sub')?.value||'ludusavi';
-  const smbPath=`\\\\${host}\\${share}\\${sub}\\${g.name}`;
+  const smbPath=`${c.remote}:${c.share}/${c.sub}/${g.name}`;
+  const localPath=g.path;
+
+  const cmds = isR
+    ? [`ludusavi cloud download`, `ludusavi restore --force "${g.name}"`]
+    : [`ludusavi backup --force "${g.name}"`, `ludusavi cloud upload`];
+
+  document.getElementById('mc-title').textContent = isR ? `Restore — ${g.name}` : `Backup — ${g.name}`;
   document.getElementById('mc-body').innerHTML=`
-    <div style="font-size:var(--xs);color:var(--txm);margin-bottom:.75rem">${isR?`Download from SMB share → overwrite local save for <strong>${g.name}</strong>.`:`Copy local save for <strong>${g.name}</strong> → upload to SMB share.`}</div>
-    <div style="background:var(--sfo);border-radius:var(--r1);padding:.75rem 1rem;font-size:var(--xs);display:flex;flex-direction:column;gap:.375rem">
+    <div class="callout cl-wa" style="font-size:var(--xs)"><i data-lucide="alert-triangle"></i><div>Copy these commands and run them in Ludusavi's CLI or a terminal. This dashboard does not execute anything.</div></div>
+
+    <div style="display:flex;flex-direction:column;gap:.375rem;font-size:var(--xs)">
       <div><span style="color:var(--txm)">Game:</span> <strong>${g.name}</strong></div>
-      <div><span style="color:var(--txm)">Local:</span> <code>${g.path}</code></div>
-      <div><span style="color:var(--txm)">Share:</span> <code>${smbPath}</code></div>
+      <div><span style="color:var(--txm)">Local path:</span> <code>${localPath}</code></div>
+      <div><span style="color:var(--txm)">SMB path (rclone):</span> <code>${smbPath}</code></div>
     </div>
-    <div style="background:var(--sfo);border:1px solid var(--bdr);border-radius:var(--r1);padding:.625rem 1rem;margin-top:.5rem">
-      <div style="font-size:10px;color:var(--txm);margin-bottom:.25rem;font-weight:500">Commands that will run:</div>
-      <pre style="font-family:var(--fm);font-size:10px;color:var(--p);line-height:1.7">${isR?`ludusavi restore --force "${g.name}"\nludusavi cloud download`:`ludusavi backup --force "${g.name}"\nludusavi cloud upload`}</pre>
+
+    <div>
+      <div style="font-size:10px;font-weight:600;color:var(--txm);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem">Run these commands in order:</div>
+      <div class="cmd-block"><pre>${cmds.map((c,i)=>`# Step ${i+1}\n${c}`).join('\n\n')}</pre><button class="copy-btn" onclick="copyText(${JSON.stringify(cmds.join('\n'))})" title="Copy all"><i data-lucide="copy"></i></button></div>
     </div>
-    ${isR?`<div class="callout cl-wa" style="margin-top:.5rem"><i data-lucide="alert-triangle"></i><span style="font-size:var(--xs)">Local save will be overwritten. Ludusavi keeps a pre-restore backup.</span></div>`:''}
+
+    ${isR?`<div class="callout cl-er" style="font-size:var(--xs)"><i data-lucide="alert-triangle"></i><div><strong>Warning:</strong> Step 2 will overwrite your local save for <strong>${g.name}</strong>. Ludusavi keeps a pre-restore backup in its local staging folder.</div></div>`:''}
+
+    <div style="font-size:var(--xs);color:var(--txm);line-height:1.7">
+      ${isR
+        ? 'Step 1 pulls the latest backup down from the SMB share into Ludusavi\'s local staging folder. Step 2 copies it over your live save.'
+        : 'Step 1 copies your live save into Ludusavi\'s local staging folder. Step 2 pushes that staging folder to the SMB share. <strong>If you only run Step 1, nothing will appear on the share.</strong>'}
+    </div>
   `;
-  const ok=document.getElementById('mc-ok');
-  ok.textContent=isR?'Restore':'Backup';
-  ok.className=`btn ${isR?'btn-bl':'btn-ok'}`;
-  document.getElementById('modal-confirm').classList.add('open');
+  document.getElementById('modal-cmd').classList.add('open');
   lucide.createIcons();
-}
-
-function runBulk(op){
-  const ids=[...selected];
-  const names=ids.map(id=>GAMES.find(g=>g.id===id)?.name).filter(Boolean);
-  pendingOp={op,ids};
-  const isR=op==='restore';
-  document.getElementById('mc-title').textContent=isR?`Restore ${ids.length} Games`:`Backup ${ids.length} Games`;
-  document.getElementById('mc-body').innerHTML=`
-    <div style="font-size:var(--xs);color:var(--txm);margin-bottom:.75rem">${isR?'Download from SMB share and overwrite local saves:':'Upload local saves to SMB share:'}</div>
-    <div style="background:var(--sfo);border-radius:var(--r1);padding:.625rem 1rem;display:flex;flex-direction:column;gap:3px;max-height:160px;overflow-y:auto">
-      ${names.map(n=>`<div style="font-size:var(--xs)">· ${n}</div>`).join('')}
-    </div>
-    <div style="background:var(--sfo);border:1px solid var(--bdr);border-radius:var(--r1);padding:.625rem 1rem;margin-top:.5rem">
-      <div style="font-size:10px;color:var(--txm);margin-bottom:.25rem;font-weight:500">Commands per game:</div>
-      <pre style="font-family:var(--fm);font-size:10px;color:var(--p);line-height:1.7">${isR?'ludusavi restore --force "[game]"\nludusavi cloud download':'ludusavi backup --force "[game]"\nludusavi cloud upload'}</pre>
-    </div>
-    ${isR?`<div class="callout cl-wa" style="margin-top:.5rem"><i data-lucide="alert-triangle"></i><span style="font-size:var(--xs)">Local saves will be overwritten. Ludusavi retains pre-restore backups.</span></div>`:''}
-  `;
-  const ok=document.getElementById('mc-ok');
-  ok.textContent=isR?`Restore ${ids.length}`:`Backup ${ids.length}`;
-  ok.className=`btn ${isR?'btn-bl':'btn-ok'}`;
-  document.getElementById('modal-confirm').classList.add('open');
-  lucide.createIcons();
-}
-
-function confirmOp(){
-  closeModal('modal-confirm');
-  if(!pendingOp) return;
-  const {op,ids}=pendingOp; pendingOp=null;
-  executeOp(op,ids);
-}
-
-function executeOp(op,ids){
-  const pw=document.getElementById('prog-wrap');
-  const pf=document.getElementById('prog-fill');
-  const pl=document.getElementById('prog-lbl');
-  const pp=document.getElementById('prog-pct');
-  pw.style.display='block';
-  let done=0;const total=ids.length;
-  const isR=op==='restore';
-  const host=document.getElementById('s-host')?.value||'192.168.1.50';
-  const share=document.getElementById('s-share')?.value||'GameSaves';
-  const sub=document.getElementById('s-sub')?.value||'ludusavi';
-
-  function tick(){
-    if(done>=total){
-      pw.style.display='none'; pf.style.width='0%';
-      toast(`${total} game${total!==1?'s':''} ${isR?'restored':'backed up'} — check log for details`,'success');
-      renderGames(); return;
-    }
-    const g=GAMES.find(x=>x.id===ids[done]);
-    const start=new Date();
-    done++;
-    const pct=Math.round((done/total)*100);
-    pf.style.width=pct+'%';
-    pl.textContent=`${isR?'Restoring':'Backing up'}: ${g?.name} (${done}/${total})`;
-    pp.textContent=pct+'%';
-
-    setTimeout(()=>{
-      if(!isR && g){g.status='ok';g.lastBackup=new Date().toISOString().slice(0,16).replace('T',' ');g.smb=`\\\\${host}\\${share}\\${sub}\\${g.name}\\`;}
-      const dur=Math.round(200+Math.random()*600);
-      const files=generateFakeFiles(g,isR);
-      addLog({
-        op: isR?'Restore':'Backup',
-        game: g?.name||'Unknown',
-        status:'ok',
-        time: new Date().toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}),
-        duration: `${dur}ms`,
-        filesChanged: files.length,
-        bytesTotal: g?.size||'—',
-        localPath: g?.path||'—',
-        smbPath: `\\\\${host}\\${share}\\${sub}\\${g?.name||''}\\`,
-        commands: isR
-          ? [`ludusavi restore --force "${g?.name}"`, `ludusavi cloud download`]
-          : [`ludusavi backup --force "${g?.name}"`, `ludusavi cloud upload`],
-        files,
-        stderr: '',
-      });
-      tick();
-    }, 400+Math.random()*400);
-  }
-  tick();
-}
-
-function generateFakeFiles(g,isR){
-  const names=['save0.dat','save1.dat','save_auto.dat','profile.json','settings.ini','checkpoint.sav'];
-  const count=1+Math.floor(Math.random()*3);
-  return names.slice(0,count).map(n=>({
-    name: n,
-    status: isR?'Copied (replaced existing)':'Copied (new)',
-    bytes: Math.floor(10000+Math.random()*500000),
-  }));
 }
 
 // ── REMOVE ────────────────────────────────────────────────────────
-function openRemove(id){
-  const g=GAMES.find(x=>x.id===id);
-  pendingRemove=id;
-  removeMode='local';
+function openRemove(gid){
+  const g=GAMES.find(x=>x.id===gid);
+  if(!g) return;
+  pendingRemoveId=gid;
+  removeMode='track';
+  const c=cfg();
+
   document.getElementById('mr-title').textContent=`Remove — ${g.name}`;
   document.getElementById('mr-body').innerHTML=`
     <div style="font-size:var(--xs);color:var(--txm);margin-bottom:.5rem">Choose what to remove:</div>
-    <div class="rm-choice">
-      <label class="rm-opt selected" id="rmo-local" onclick="setRemoveMode('local')">
-        <input type="radio" name="rmmode" value="local" checked>
-        <div class="rm-opt-info">
-          <div class="rm-opt-name"><i data-lucide="x-circle" style="width:13px;height:13px;display:inline;vertical-align:middle;margin-right:4px"></i> Stop tracking (local only)</div>
-          <div class="rm-opt-desc">Remove <strong>${g.name}</strong> from this dashboard's tracking list. Does <em>not</em> delete any files.</div>
-        </div>
+    <div style="display:flex;flex-direction:column;gap:.5rem">
+      <label class="rm-opt selected" id="rmo-track" onclick="setRemoveMode('track')">
+        <input type="radio" name="rmmode" value="track" checked>
+        <div><div class="rm-opt-name">Stop tracking only</div><div class="rm-opt-desc">Remove <strong>${g.name}</strong> from this list. No files are touched — local saves and SMB backup remain.</div></div>
       </label>
-      <label class="rm-opt" id="rmo-smb" onclick="setRemoveMode('smb')" ${!g.smb?'style="opacity:.4;pointer-events:none"':''}>
-        <input type="radio" name="rmmode" value="smb" ${!g.smb?'disabled':''}>
-        <div class="rm-opt-info">
-          <div class="rm-opt-name"><i data-lucide="cloud-off" style="width:13px;height:13px;display:inline;vertical-align:middle;margin-right:4px"></i> Delete from SMB share</div>
-          <div class="rm-opt-desc">Run <code>ludusavi cloud delete "${g.name}"</code> — removes backup files from the share. Local save is untouched.</div>
-        </div>
+      <label class="rm-opt" id="rmo-smb" onclick="setRemoveMode('smb')">
+        <input type="radio" name="rmmode" value="smb">
+        <div><div class="rm-opt-name">Show command to delete SMB backup</div><div class="rm-opt-desc">Generates the rclone command to delete <strong>${g.name}</strong> from the share. You must run it manually. Local save is untouched.</div></div>
       </label>
       <label class="rm-opt" id="rmo-both" onclick="setRemoveMode('both')">
         <input type="radio" name="rmmode" value="both">
-        <div class="rm-opt-info">
-          <div class="rm-opt-name"><i data-lucide="trash-2" style="width:13px;height:13px;display:inline;vertical-align:middle;margin-right:4px"></i> Remove tracking + delete from share</div>
-          <div class="rm-opt-desc">Stop tracking AND delete the backup from the SMB share. Local save file is <em>not</em> deleted.</div>
-        </div>
+        <div><div class="rm-opt-name">Stop tracking + show delete command</div><div class="rm-opt-desc">Both of the above.</div></div>
       </label>
     </div>
-    <div class="callout cl-wa" style="margin-top:.5rem"><i data-lucide="alert-triangle"></i><span style="font-size:var(--xs)">This dashboard does not delete local save files — only Ludusavi can manage those.</span></div>
+    <div id="rm-cmd-area" style="display:none;margin-top:.5rem">
+      <div style="font-size:10px;font-weight:500;color:var(--txm);margin-bottom:.375rem">Run this to delete from SMB share:</div>
+      <div class="cmd-block"><pre id="rm-cmd">${c.rclone} delete "${c.remote}:${c.share}/${c.sub}/${g.name}" --rmdirs</pre><button class="copy-btn" onclick="copyEl('rm-cmd')" title="Copy"><i data-lucide="copy"></i></button></div>
+    </div>
   `;
   document.getElementById('modal-remove').classList.add('open');
   lucide.createIcons();
 }
 
-function setRemoveMode(mode){
-  removeMode=mode;
-  ['local','smb','both'].forEach(m=>{
-    document.getElementById('rmo-'+m)?.classList.toggle('selected',m===mode);
+function setRemoveMode(m){
+  removeMode=m;
+  ['track','smb','both'].forEach(x=>{
+    document.getElementById('rmo-'+x)?.classList.toggle('selected',x===m);
   });
+  const showCmd=m==='smb'||m==='both';
+  document.getElementById('rm-cmd-area').style.display=showCmd?'block':'none';
 }
 
 function confirmRemove(){
-  if(!pendingRemove) return;
-  const id=pendingRemove;
-  const g=GAMES.find(x=>x.id===id);
+  if(!pendingRemoveId) return;
+  const g=GAMES.find(x=>x.id===pendingRemoveId);
+  if(removeMode==='track'||removeMode==='both'){
+    GAMES=GAMES.filter(x=>x.id!==pendingRemoveId);
+    save();
+    toast(`${g?.name} removed from tracking`,'info');
+  } else {
+    toast('Run the delete command shown above to remove the SMB backup','info');
+  }
   closeModal('modal-remove');
-
-  if(removeMode==='local'||removeMode==='both'){
-    const idx=GAMES.findIndex(x=>x.id===id);
-    if(idx!==-1) GAMES.splice(idx,1);
-    selected.delete(id);
-    toast(`${g.name} removed from tracking`,'info');
-  }
-  if(removeMode==='smb'||removeMode==='both'){
-    if(g.smb){
-      addLog({
-        op:'Delete (SMB)',game:g.name,status:'ok',
-        time:new Date().toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}),
-        duration:'—',filesChanged:0,bytesTotal:'—',
-        localPath:g.path,smbPath:g.smb,
-        commands:[`ludusavi cloud delete "${g.name}"`],
-        files:[],stderr:'',
-      });
-      toast(`${g.name} SMB backup scheduled for deletion`,'info');
-    } else {
-      toast(`${g.name} has no SMB backup to delete`,'info');
-    }
-  }
-  pendingRemove=null;
+  pendingRemoveId=null;
   renderGames();
 }
 
-// ── LOG ───────────────────────────────────────────────────────────
-function addLog(entry){
-  LOG.unshift(entry);
-  if(LOG.length>200) LOG.pop();
-}
+// ── BULK & CONFIG REFRESH ─────────────────────────────────────────
+function refreshAll(){
+  const c=cfg();
 
-function renderLog(){
-  const lb=document.getElementById('log-body');
-  if(!LOG.length){
-    lb.innerHTML=`<div style="padding:3rem;text-align:center;color:var(--txm);font-size:var(--xs)">No operations yet — run a backup or restore.</div>`;
-    return;
-  }
-  lb.innerHTML=LOG.map((e,i)=>{
-    const dotCls=e.status==='ok'?(e.op.includes('Restore')?'ld-bl':(e.op.includes('Delete')?'ld-wa':'ld-ok')):'ld-er';
-    const fileRows=e.files.map(f=>{
-      const sc=f.status.includes('new')?'lf-new':f.status.includes('replaced')?'lf-mod':f.status.includes('Deleted')?'lf-del':'lf-skip';
-      const sl=f.status.includes('new')?'NEW':f.status.includes('replaced')?'MOD':f.status.includes('Deleted')?'DEL':'SKIP';
-      const kb=(f.bytes/1024).toFixed(1);
-      return `<div class="log-file"><span class="lf-status ${sc}">${sl}</span><span class="lf-path">${f.name} <span style="color:var(--txf)">(${kb} KB)</span></span></div>`;
-    }).join('');
-    const cmds=e.commands.map(c=>`$ ${c}`).join('\n');
-    return `
-      <div class="log-entry">
-        <div class="log-hdr" onclick="toggleLogEntry(${i})">
-          <div class="log-dot ${dotCls}"></div>
-          <div class="log-summary">${e.op} — <strong>${e.game}</strong></div>
-          <div class="log-time">${e.time}</div>
-          <i data-lucide="chevron-right" class="log-chevron" id="lc-${i}" width="13" height="13"></i>
-        </div>
-        <div class="log-detail" id="ld-${i}">
-          <div class="log-meta">
-            <span>Status: <strong style="color:${e.status==='ok'?'var(--ok)':'var(--er)'}">${e.status==='ok'?'Success':'Error'}</strong></span>
-            <span>Duration: <strong>${e.duration}</strong></span>
-            <span>Files changed: <strong>${e.filesChanged}</strong></span>
-            <span>Data: <strong>${e.bytesTotal}</strong></span>
-          </div>
-          <div style="font-size:10px;color:var(--txm);margin-bottom:.375rem"><strong>Local path:</strong> <code>${e.localPath}</code></div>
-          <div style="font-size:10px;color:var(--txm);margin-bottom:.625rem"><strong>SMB path:</strong> <code>${e.smbPath}</code></div>
-          ${e.files.length?`<div style="font-size:10px;font-weight:500;color:var(--txm);margin-bottom:.375rem">Files transferred:</div>${fileRows}`:'<div style="font-size:10px;color:var(--txf)">No files transferred.</div>'}
-          <div class="log-cmd"><pre>${cmds}</pre></div>
-          ${e.stderr?`<div class="log-err">${e.stderr}</div>`:''}
-        </div>
-      </div>
-    `;
-  }).join('');
+  // Bulk commands
+  const bkAll=`ludusavi backup --force\nludusavi cloud upload`;
+  const rsAll=`ludusavi cloud download\nludusavi restore --force`;
+  const verify=`${c.rclone} lsd ${c.remote}:`;
+  const bat=`@echo off\necho === SaveSync Backup %date% %time% ===\n\necho Verifying SMB connection...\n${c.rclone} lsd ${c.remote}: || (echo ERROR: Cannot reach share. Check rclone config. && pause && exit /b 1)\n\necho Backing up all saves to local staging...\nlupusavi backup --force\n\necho Uploading to SMB share...\nlupusavi cloud upload\n\necho Done. Check Ludusavi log for details.\npause`.replace(/lupusavi/g,'ludusavi');
+
+  const e=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  e('cmd-backup-all',bkAll);
+  e('cmd-restore-all',rsAll);
+  e('cmd-verify',verify);
+  e('cmd-bat',bat);
+
+  // rclone.conf
+  e('rclone-cfg',`[${c.remote}]\ntype = smb\nhost = ${c.host}\nuser = ${c.user}\npass = <run: rclone obscure YOUR_PASSWORD>`);
+
+  // Ludusavi cfg
+  e('ludusavi-cfg',`cloud:\n  remote:\n    type: Smb\n    id: ${c.remote}\n  path: "${c.share}/${c.sub}"\n  synchronize: false   # manual only`);
+
+  // Settings preview
+  const sp=document.getElementById('s-remote-preview');
+  if(sp) sp.textContent=c.remote;
+
+  // Guide
+  e('guide-verify',`${c.rclone} lsd ${c.remote}:\n# Expected: list of folders on share, or empty\n# Error here = credentials/host problem`);
+  e('guide-backup-eg',`# Step 1 — stage locally (does NOT touch the share yet)\nlupusavi backup --force "Elden Ring"\n\n# Step 2 — push to SMB share (required!)\nlupusavi cloud upload`.replace(/lupusavi/g,'ludusavi'));
+
   lucide.createIcons();
 }
 
-function toggleLogEntry(i){
-  const detail=document.getElementById('ld-'+i);
-  const chev=document.getElementById('lc-'+i);
-  const isOpen=detail.classList.contains('open');
-  detail.classList.toggle('open',!isOpen);
-  chev.classList.toggle('open',!isOpen);
-}
+// ── UTILITIES ─────────────────────────────────────────────────────
+function copyEl(id){ copyText(document.getElementById(id)?.textContent||''); }
+function copyText(t){ navigator.clipboard?.writeText(t).then(()=>toast('Copied','success')).catch(()=>toast('Select and copy manually','info')); }
 
-function clearLog(){LOG=[];renderLog();toast('Log cleared','info');}
-
-function exportLog(){
-  const lines=LOG.map(e=>[
-    `[${e.time}] ${e.op.toUpperCase()} — ${e.game} (${e.status})`,
-    `  Duration: ${e.duration} | Files: ${e.filesChanged} | Size: ${e.bytesTotal}`,
-    `  Local: ${e.localPath}`,
-    `  SMB:   ${e.smbPath}`,
-    `  Commands:\n${e.commands.map(c=>`    $ ${c}`).join('\n')}`,
-    e.files.length?`  Files:\n${e.files.map(f=>`    ${f.status}: ${f.name} (${(f.bytes/1024).toFixed(1)} KB)`).join('\n')}`:null,
-    e.stderr?`  STDERR: ${e.stderr}`:null,
-    '',
-  ].filter(Boolean).join('\n')).join('\n');
-  const blob=new Blob([lines],{type:'text/plain'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=`savesync-log-${new Date().toISOString().slice(0,10)}.txt`;
-  a.click();
-  toast('Log exported','success');
-}
-
-function rescan(){toast('Rescanning — check Ludusavi GUI for updated game list','info');}
-
-// ── SETTINGS ─────────────────────────────────────────────────────
-function updateCfgPreview(){
-  const h=document.getElementById('s-host')?.value||'192.168.1.50';
-  const sh=document.getElementById('s-share')?.value||'GameSaves';
-  const u=document.getElementById('s-user')?.value||'sage';
-  const sb=document.getElementById('s-sub')?.value||'ludusavi';
-  document.getElementById('rclone-cfg').textContent=
-`[nas]\ntype = smb\nhost = ${h}\nuser = ${u}\npass = <run: rclone obscure YOUR_PASSWORD>\n\n# Ludusavi config.yaml:\ncloud:\n  remote:\n    type: Smb\n    id: nas\n  path: "${sh}/${sb}"\n  synchronize: false`;
-  const pp=document.getElementById('s-preview-path');
-  if(pp) pp.textContent=`\\\\${h}\\${sh}\\${sb}`;
-  const sl=document.getElementById('smb-label');
-  if(sl) sl.textContent=`\\\\${h}\\${sh}\\${sb}`;
-}
-
-['s-host','s-share','s-user','s-sub'].forEach(id=>{
-  document.getElementById(id)?.addEventListener('input',updateCfgPreview);
-});
-
-function saveSettings(){updateCfgPreview();document.getElementById('smb-dot').className='dot dot-g';document.getElementById('smb-st').textContent='Connected · rclone SMB';toast('Settings saved','success');}
-
-function testSmb(){
-  document.getElementById('smb-dot').className='dot dot-y';
-  document.getElementById('smb-st').textContent='Testing…';
-  toast('Testing SMB connection…','info');
-  setTimeout(()=>{
-    document.getElementById('smb-dot').className='dot dot-g';
-    document.getElementById('smb-st').textContent='Connected · rclone SMB';
-    toast('SMB reachable — connection OK','success');
-    addLog({op:'Connection Test',game:'SMB Share',status:'ok',time:new Date().toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}),duration:'142ms',filesChanged:0,bytesTotal:'—',localPath:'—',smbPath:document.getElementById('smb-label').textContent,commands:['rclone lsd nas:'],files:[],stderr:''});
-  },1400);
-}
-
-function copyConfig(){
-  const txt=document.getElementById('rclone-cfg').textContent;
-  navigator.clipboard?.writeText(txt).then(()=>toast('Copied','success')).catch(()=>toast('Select and copy manually','info'));
-}
-
-// ── MODALS ────────────────────────────────────────────────────────
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-['modal-confirm','modal-remove'].forEach(id=>{
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+['modal-cmd','modal-remove'].forEach(id=>{
   document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeModal(id);});
 });
 
-// ── TOAST ─────────────────────────────────────────────────────────
 function toast(msg,type='info'){
   const c={success:'var(--ok)',info:'var(--p)',warning:'var(--wa)',error:'var(--er)'};
   const el=document.createElement('div');
@@ -962,17 +688,17 @@ function toast(msg,type='info'){
 // ── THEME ─────────────────────────────────────────────────────────
 (function(){
   const t=document.querySelector('[data-theme-toggle]'),r=document.documentElement;
-  let d=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  let d=localStorage.getItem('savesync-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
   r.setAttribute('data-theme',d);
   const sun=`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`;
   const moon=`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
-  function upd(){t.innerHTML=d==='dark'?sun:moon;}upd();
-  t&&t.addEventListener('click',()=>{d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);upd();});
+  function upd(){if(t)t.innerHTML=d==='dark'?sun:moon;}upd();
+  t&&t.addEventListener('click',()=>{d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);localStorage.setItem('savesync-theme',d);upd();});
 })();
 
 // ── INIT ──────────────────────────────────────────────────────────
 renderGames();
-updateCfgPreview();
+refreshAll();
 go('games');
 </script>
 </body>
