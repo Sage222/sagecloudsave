@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SaveSync – Ludusavi Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+:root,[data-theme="light"]{
+  --color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;
+  --color-surface-offset:#f3f0ec;--color-surface-dynamic:#e6e4df;
+  --color-divider:#dcd9d5;--color-border:#d4d1ca;
+  --color-text:#28251d;--color-text-muted:#7a7974;--color-text-faint:#bab9b4;
+  --color-text-inverse:#f9f8f4;
+  --color-primary:#01696f;--color-primary-hover:#0c4e54;--color-primary-highlight:#cedcd8;
+  --color-success:#437a22;--color-success-hl:#d4dfcc;
+  --color-warning:#964219;--color-warning-hl:#ddcfc6;
+  --color-error:#a12c7b;--color-error-hl:#e0ced7;
+  --color-blue:#006494;--color-blue-hl:#c6d8e4;
+  --shadow-sm:0 1px 2px oklch(0.2 0.01 80/0.06);
+  --shadow-md:0 4px 12px oklch(0.2 0.01 80/0.08);
+  --shadow-lg:0 12px 32px oklch(0.2 0.01 80/0.12);
+  --radius-sm:.375rem;--radius-md:.5rem;--radius-lg:.75rem;--radius-xl:1rem;--radius-full:9999px;
+  --tr:180ms cubic-bezier(.16,1,.3,1);
+  --font-body:'Inter','Helvetica Neue',sans-serif;
+  --font-mono:'JetBrains Mono','Consolas',monospace;
+  --tx-xs:clamp(.75rem,.7rem + .25vw,.875rem);
+  --tx-sm:clamp(.875rem,.8rem + .35vw,1rem);
+  --tx-base:clamp(1rem,.95rem + .25vw,1.125rem);
+  --tx-lg:clamp(1.125rem,1rem + .75vw,1.5rem);
+  --tx-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
+  --sp1:.25rem;--sp2:.5rem;--sp3:.75rem;--sp4:1rem;--sp5:1.25rem;--sp6:1.5rem;
+  --sp8:2rem;--sp10:2.5rem;--sp12:3rem;--sp16:4rem;
+  --sw:220px;
+}
+[data-theme="dark"]{
+  --color-bg:#171614;--color-surface:#1c1b19;--color-surface-2:#201f1d;
+  --color-surface-offset:#1d1c1a;--color-surface-dynamic:#2d2c2a;
+  --color-divider:#262523;--color-border:#393836;
+  --color-text:#cdccca;--color-text-muted:#797876;--color-text-faint:#5a5957;
+  --color-primary:#4f98a3;--color-primary-hover:#227f8b;--color-primary-highlight:#313b3b;
+  --color-success:#6daa45;--color-success-hl:#3a4435;
+  --color-warning:#bb653b;--color-warning-hl:#564942;
+  --color-error:#d163a7;--color-error-hl:#4c3d46;
+  --color-blue:#5591c7;--color-blue-hl:#3a4550;
+  --shadow-sm:0 1px 2px oklch(0 0 0/.2);--shadow-md:0 4px 12px oklch(0 0 0/.3);--shadow-lg:0 12px 32px oklch(0 0 0/.4);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{min-height:100dvh;font-family:var(--font-body);font-size:var(--tx-sm);color:var(--color-text);background:var(--color-bg);display:flex;overflow:hidden}
+button{cursor:pointer;background:none;border:none;font:inherit;color:inherit}
+a,button,input,select,textarea{transition:color var(--tr),background var(--tr),border-color var(--tr),box-shadow var(--tr)}
+:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-sm)}
+input,textarea,select{font:inherit;color:inherit}
+ul{list-style:none}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--color-border);border-radius:3px}
+
+/* SIDEBAR */
+.sidebar{width:var(--sw);min-height:100dvh;background:var(--color-surface);border-right:1px solid var(--color-border);display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;left:0;bottom:0;z-index:100}
+.main{margin-left:var(--sw);flex:1;min-height:100dvh;display:flex;flex-direction:column;overflow-y:auto;height:100dvh}
+
+.logo-area{padding:var(--sp4) var(--sp4) var(--sp3);border-bottom:1px solid var(--color-divider);display:flex;align-items:center;gap:var(--sp3)}
+.logo-text{font-size:var(--tx-sm);font-weight:700;letter-spacing:-.02em}
+.logo-sub{font-size:var(--tx-xs);color:var(--color-text-muted)}
+.logo-icon{color:var(--color-primary);flex-shrink:0}
+
+.nav{padding:var(--sp3) var(--sp2);flex:1;overflow-y:auto}
+.nav-label{font-size:10px;font-weight:600;color:var(--color-text-faint);text-transform:uppercase;letter-spacing:.08em;padding:var(--sp2) var(--sp2) var(--sp1);margin-top:var(--sp3)}
+.nav-item{display:flex;align-items:center;gap:var(--sp3);padding:var(--sp2) var(--sp2);border-radius:var(--radius-md);font-size:var(--tx-sm);color:var(--color-text-muted);cursor:pointer;margin-bottom:1px}
+.nav-item:hover{background:var(--color-surface-dynamic);color:var(--color-text)}
+.nav-item.active{background:var(--color-primary-highlight);color:var(--color-primary)}
+.nav-item i{width:15px;height:15px;flex-shrink:0}
+
+.smb-status{margin:var(--sp3) var(--sp2);padding:var(--sp3);background:var(--color-surface-offset);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:var(--tx-xs)}
+.smb-row{display:flex;align-items:center;gap:var(--sp2);color:var(--color-text-muted)}
+.dot{width:7px;height:7px;border-radius:var(--radius-full);flex-shrink:0}
+.dot-green{background:var(--color-success)}
+.dot-red{background:var(--color-error)}
+.dot-yellow{background:var(--color-warning)}
+
+.sidebar-footer{padding:var(--sp3) var(--sp4);border-top:1px solid var(--color-divider);display:flex;align-items:center;justify-content:space-between}
+
+/* TOPBAR */
+.topbar{background:var(--color-surface);border-bottom:1px solid var(--color-border);padding:var(--sp3) var(--sp6);display:flex;align-items:center;gap:var(--sp4);position:sticky;top:0;z-index:50}
+.topbar-title{font-size:var(--tx-lg);font-weight:600;letter-spacing:-.02em;flex:1}
+.topbar-actions{display:flex;align-items:center;gap:var(--sp2)}
+
+/* PAGES */
+.page{display:none;padding:var(--sp6);flex-direction:column;gap:var(--sp5)}
+.page.active{display:flex}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:var(--sp2);padding:var(--sp2) var(--sp4);border-radius:var(--radius-md);font-size:var(--tx-sm);font-weight:500;cursor:pointer;border:none;white-space:nowrap}
+.btn i{width:14px;height:14px;flex-shrink:0}
+.btn-primary{background:var(--color-primary);color:var(--color-text-inverse)}
+.btn-primary:hover{background:var(--color-primary-hover)}
+.btn-ghost{background:transparent;color:var(--color-text-muted);border:1px solid var(--color-border)}
+.btn-ghost:hover{background:var(--color-surface-dynamic);color:var(--color-text)}
+.btn-success{background:var(--color-success);color:#fff}
+.btn-success:hover{opacity:.85}
+.btn-warn{background:var(--color-warning-hl);color:var(--color-warning)}
+.btn-warn:hover{opacity:.85}
+.btn-danger{background:var(--color-error-hl);color:var(--color-error)}
+.btn-danger:hover{opacity:.85}
+.btn-blue{background:var(--color-blue-hl);color:var(--color-blue)}
+.btn-blue:hover{opacity:.85}
+.btn-sm{padding:var(--sp1) var(--sp3);font-size:var(--tx-xs)}
+.btn-icon{padding:var(--sp2);border-radius:var(--radius-md);color:var(--color-text-muted)}
+.btn-icon:hover{background:var(--color-surface-dynamic);color:var(--color-text)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* CARDS */
+.card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden}
+.card-header{padding:var(--sp4) var(--sp5);border-bottom:1px solid var(--color-divider);display:flex;align-items:center;justify-content:space-between;gap:var(--sp4)}
+.card-title{font-size:var(--tx-sm);font-weight:600}
+.card-footer{padding:var(--sp3) var(--sp5);border-top:1px solid var(--color-divider);display:flex;align-items:center;justify-content:flex-end;gap:var(--sp2)}
+
+/* GAME TABLE */
+.game-table{width:100%;border-collapse:collapse}
+.game-table th{font-size:var(--tx-xs);font-weight:500;color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.06em;padding:var(--sp2) var(--sp4);text-align:left;background:var(--color-surface-offset);border-bottom:1px solid var(--color-divider)}
+.game-table th:first-child,.game-table td:first-child{width:40px;text-align:center}
+.game-table td{padding:var(--sp3) var(--sp4);font-size:var(--tx-xs);border-bottom:1px solid var(--color-divider);vertical-align:middle}
+.game-table tr:last-child td{border-bottom:none}
+.game-table tr:hover td{background:color-mix(in oklch,var(--color-surface-dynamic) 50%,transparent)}
+.game-name{font-weight:500;font-size:var(--tx-sm);color:var(--color-text)}
+.game-path{font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);margin-top:2px;max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.game-actions{display:flex;gap:4px;align-items:center}
+
+/* CHECKBOX */
+.cb{width:16px;height:16px;accent-color:var(--color-primary);cursor:pointer}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:var(--radius-full);font-size:var(--tx-xs);font-weight:500}
+.badge i{width:10px;height:10px}
+.b-ok{background:var(--color-success-hl);color:var(--color-success)}
+.b-warn{background:var(--color-warning-hl);color:var(--color-warning)}
+.b-err{background:var(--color-error-hl);color:var(--color-error)}
+.b-blue{background:var(--color-blue-hl);color:var(--color-blue)}
+.b-muted{background:var(--color-surface-dynamic);color:var(--color-text-muted)}
+
+/* FORM */
+.form-body{padding:var(--sp5);display:flex;flex-direction:column;gap:var(--sp4)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp4)}
+.form-group{display:flex;flex-direction:column;gap:var(--sp2)}
+.form-group.full{grid-column:1/-1}
+.form-label{font-size:var(--tx-xs);font-weight:500;color:var(--color-text-muted)}
+.form-input{background:var(--color-surface-offset);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--sp2) var(--sp3);font-size:var(--tx-sm);color:var(--color-text)}
+.form-input:focus{outline:2px solid var(--color-primary);outline-offset:2px}
+.form-input.mono{font-family:var(--font-mono);font-size:11px}
+.form-hint{font-size:10px;color:var(--color-text-faint);line-height:1.5}
+
+/* LOG */
+.log-item{display:flex;align-items:flex-start;gap:var(--sp3);padding:var(--sp3) var(--sp5);border-bottom:1px solid var(--color-divider);font-size:var(--tx-xs)}
+.log-item:last-child{border-bottom:none}
+.log-dot{width:7px;height:7px;border-radius:var(--radius-full);flex-shrink:0;margin-top:3px}
+.log-dot.up{background:var(--color-success)}
+.log-dot.down{background:var(--color-blue)}
+.log-dot.err{background:var(--color-error)}
+.log-dot.info{background:var(--color-primary)}
+.log-msg{flex:1;color:var(--color-text)}
+.log-game{color:var(--color-primary);font-weight:500}
+.log-time{font-family:var(--font-mono);color:var(--color-text-faint);flex-shrink:0;font-size:10px}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:var(--sp4)}
+.kpi{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--sp4);box-shadow:var(--shadow-sm)}
+.kpi-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-muted);margin-bottom:var(--sp2)}
+.kpi-val{font-size:var(--tx-xl);font-weight:700;letter-spacing:-.04em;font-variant-numeric:tabular-nums lining-nums}
+.kpi-sub{font-size:var(--tx-xs);color:var(--color-text-muted);margin-top:2px}
+
+/* SELECTION BAR */
+.sel-bar{display:flex;align-items:center;gap:var(--sp3);padding:var(--sp3) var(--sp4);background:var(--color-primary-highlight);border-radius:var(--radius-md);font-size:var(--tx-xs);color:var(--color-primary);font-weight:500}
+.sel-bar i{width:14px;height:14px}
+.sel-actions{display:flex;gap:var(--sp2);margin-left:auto}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:oklch(0 0 0/.55);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity var(--tr);backdrop-filter:blur(3px)}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-xl);width:520px;max-width:calc(100vw - 2rem);box-shadow:var(--shadow-lg);transform:translateY(8px);transition:transform var(--tr)}
+.overlay.open .modal{transform:translateY(0)}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:var(--sp4) var(--sp5);border-bottom:1px solid var(--color-divider)}
+.modal-title{font-size:var(--tx-sm);font-weight:600}
+.modal-body{padding:var(--sp5);display:flex;flex-direction:column;gap:var(--sp4)}
+.modal-footer{padding:var(--sp3) var(--sp5);border-top:1px solid var(--color-divider);display:flex;justify-content:flex-end;gap:var(--sp2)}
+
+/* PROGRESS */
+.progress-wrap{height:4px;background:var(--color-surface-dynamic);border-radius:var(--radius-full);overflow:hidden}
+.progress-fill{height:100%;background:var(--color-primary);border-radius:var(--radius-full);width:0%;transition:width .4s ease}
+
+/* CALLOUT */
+.callout{display:flex;gap:var(--sp3);padding:var(--sp4);border-radius:var(--radius-md);font-size:var(--tx-xs);align-items:flex-start}
+.callout i{width:16px;height:16px;flex-shrink:0;margin-top:1px}
+.callout-info{background:var(--color-blue-hl);color:var(--color-blue);border:1px solid color-mix(in oklch,var(--color-blue) 25%,transparent)}
+.callout-ok{background:var(--color-success-hl);color:var(--color-success);border:1px solid color-mix(in oklch,var(--color-success) 25%,transparent)}
+.callout-warn{background:var(--color-warning-hl);color:var(--color-warning);border:1px solid color-mix(in oklch,var(--color-warning) 25%,transparent)}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:var(--sp16) var(--sp8);color:var(--color-text-muted)}
+.empty i{width:36px;height:36px;color:var(--color-text-faint);margin-bottom:var(--sp4)}
+.empty h3{font-size:var(--tx-sm);font-weight:600;color:var(--color-text);margin-bottom:var(--sp2)}
+.empty p{font-size:var(--tx-xs);max-width:30ch;margin-bottom:var(--sp4)}
+
+/* TOGGLE */
+.toggle{position:relative;width:34px;height:19px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-sl{position:absolute;inset:0;background:var(--color-surface-dynamic);border-radius:var(--radius-full);cursor:pointer;transition:background var(--tr)}
+.toggle-sl::before{content:'';position:absolute;width:13px;height:13px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform var(--tr)}
+.toggle input:checked+.toggle-sl{background:var(--color-primary)}
+.toggle input:checked+.toggle-sl::before{transform:translateX(15px)}
+
+/* SETTINGS ROWS */
+.srow{display:flex;align-items:center;justify-content:space-between;padding:var(--sp4) var(--sp5);border-bottom:1px solid var(--color-divider)}
+.srow:last-child{border-bottom:none}
+.sinfo{display:flex;flex-direction:column;gap:3px}
+.sname{font-size:var(--tx-sm);font-weight:500}
+.sdesc{font-size:var(--tx-xs);color:var(--color-text-muted);max-width:42ch}
+code{font-family:var(--font-mono);font-size:10px;background:var(--color-surface-dynamic);padding:1px 5px;border-radius:3px}
+
+/* SEARCH */
+.search-wrap{position:relative}
+.search-wrap i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--color-text-muted);width:14px;height:14px;pointer-events:none}
+.search-input{background:var(--color-surface-offset);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--sp2) var(--sp3) var(--sp2) var(--sp8);font-size:var(--tx-sm);color:var(--color-text);width:220px}
+.search-input:focus{outline:2px solid var(--color-primary);outline-offset:2px}
+
+/* TOAST */
+#toast{position:fixed;bottom:var(--sp6);right:var(--sp6);z-index:300;display:flex;flex-direction:column;gap:var(--sp2);pointer-events:none}
+
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);transition:transform var(--tr)}
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0}
+  .form-row{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .page{padding:var(--sp4)}
+  .topbar{padding:var(--sp3) var(--sp4)}
+  .game-path{display:none}
+}
+.menu-btn{display:none}
+@media(max-width:768px){.menu-btn{display:flex}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="logo-area">
+    <svg class="logo-icon" width="26" height="26" viewBox="0 0 26 26" fill="none" aria-label="SaveSync">
+      <rect x="3" y="3" width="20" height="20" rx="5" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M13 8v10M8 13h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".35"/>
+      <circle cx="13" cy="13" r="3.5" fill="currentColor"/>
+      <circle cx="3" cy="13" r="1.5" fill="currentColor" opacity=".4"/>
+      <circle cx="23" cy="13" r="1.5" fill="currentColor" opacity=".4"/>
+    </svg>
+    <div>
+      <div class="logo-text">SaveSync</div>
+      <div class="logo-sub">Ludusavi Dashboard</div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-label">Main</div>
+    <div class="nav-item active" onclick="go('games')"><i data-lucide="gamepad-2"></i> Games</div>
+    <div class="nav-item" onclick="go('log')"><i data-lucide="activity"></i> Log</div>
+    <div class="nav-label">Setup</div>
+    <div class="nav-item" onclick="go('settings')"><i data-lucide="settings"></i> Settings</div>
+    <div class="nav-item" onclick="go('setup-guide')"><i data-lucide="book-open"></i> Setup Guide</div>
+  </nav>
+
+  <!-- SMB STATUS WIDGET -->
+  <div class="smb-status">
+    <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-faint);margin-bottom:var(--sp2)">SMB Share</div>
+    <div class="smb-row"><div class="dot dot-green" id="smb-dot"></div><span id="smb-path-label" style="font-family:var(--font-mono);font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">\\NAS\GameSaves</span></div>
+    <div style="font-size:10px;color:var(--color-text-faint);margin-top:4px" id="smb-status-text">Connected · rclone SMB</div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div style="font-size:var(--tx-xs);color:var(--color-text-muted)">v0.31.0</div>
+    <button class="btn-icon" data-theme-toggle aria-label="Toggle theme">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main" id="main">
+
+  <header class="topbar">
+    <button class="btn btn-icon menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')"><i data-lucide="menu"></i></button>
+    <div class="topbar-title" id="topbar-title">Games</div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost btn-sm" onclick="selectAll()" id="sel-all-btn"><i data-lucide="check-square"></i> Select All</button>
+      <button class="btn btn-success btn-sm" onclick="runBulk('backup')" id="bulk-backup-btn" disabled><i data-lucide="upload-cloud"></i> Backup Selected</button>
+      <button class="btn btn-blue btn-sm" onclick="runBulk('restore')" id="bulk-restore-btn" disabled><i data-lucide="download-cloud"></i> Restore Selected</button>
+    </div>
+  </header>
+
+  <!-- GAMES PAGE -->
+  <div class="page active" id="page-games">
+
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-label">Total Games</div>
+        <div class="kpi-val" id="kpi-total">—</div>
+        <div class="kpi-sub">tracked by Ludusavi</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Selected</div>
+        <div class="kpi-val" id="kpi-sel" style="color:var(--color-primary)">0</div>
+        <div class="kpi-sub">ready to sync</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Last Backup</div>
+        <div class="kpi-val" style="font-size:var(--tx-lg)" id="kpi-last">—</div>
+        <div class="kpi-sub" id="kpi-last-sub">never</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">SMB Target</div>
+        <div class="kpi-val" style="font-size:var(--tx-lg);color:var(--color-success)" id="kpi-smb">OK</div>
+        <div class="kpi-sub">share reachable</div>
+      </div>
+    </div>
+
+    <!-- FILTER + SEARCH BAR -->
+    <div style="display:flex;align-items:center;gap:var(--sp3);flex-wrap:wrap">
+      <div class="search-wrap">
+        <i data-lucide="search"></i>
+        <input class="search-input" id="search-box" placeholder="Search games…" oninput="filterGames()">
+      </div>
+      <select class="form-input" id="filter-status" onchange="filterGames()" style="width:auto;font-size:var(--tx-xs)">
+        <option value="all">All statuses</option>
+        <option value="ok">Backed up</option>
+        <option value="never">Never backed up</option>
+        <option value="stale">Stale</option>
+      </select>
+      <button class="btn btn-ghost btn-sm" onclick="clearSel()"><i data-lucide="x-square"></i> Clear</button>
+    </div>
+
+    <!-- SELECTION SUMMARY BAR -->
+    <div class="sel-bar" id="sel-bar" style="display:none">
+      <i data-lucide="check-square"></i>
+      <span id="sel-count-label">0 games selected</span>
+      <div class="sel-actions">
+        <button class="btn btn-success btn-sm" onclick="runBulk('backup')"><i data-lucide="upload-cloud"></i> Backup</button>
+        <button class="btn btn-blue btn-sm" onclick="runBulk('restore')"><i data-lucide="download-cloud"></i> Restore</button>
+      </div>
+    </div>
+
+    <!-- PROGRESS -->
+    <div id="progress-wrap" style="display:none">
+      <div style="display:flex;justify-content:space-between;font-size:var(--tx-xs);color:var(--color-text-muted);margin-bottom:var(--sp2)">
+        <span id="progress-label">Running…</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Detected Games</div>
+        <div style="display:flex;gap:var(--sp2)">
+          <button class="btn btn-ghost btn-sm" onclick="rescan()"><i data-lucide="refresh-cw"></i> Rescan</button>
+        </div>
+      </div>
+      <table class="game-table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" class="cb" id="header-cb" onchange="toggleAll(this.checked)" title="Select all"></th>
+            <th>Game</th>
+            <th>Status</th>
+            <th>Last Backup</th>
+            <th>Size</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="game-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- LOG PAGE -->
+  <div class="page" id="page-log">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Operation Log</div>
+        <button class="btn btn-ghost btn-sm" onclick="clearLog()"><i data-lucide="trash-2"></i> Clear</button>
+      </div>
+      <div id="log-body"></div>
+    </div>
+  </div>
+
+  <!-- SETTINGS PAGE -->
+  <div class="page" id="page-settings">
+    <div class="callout callout-info"><i data-lucide="info"></i><div>These settings map directly to Ludusavi's <code>config.yaml</code> and the rclone SMB remote. After saving, Ludusavi will use your SMB share as the backup destination — no cloud account needed.</div></div>
+
+    <div class="card" style="max-width:660px">
+      <div class="card-header"><div class="card-title">SMB Share (rclone)</div></div>
+      <div class="form-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Share Host / IP</label>
+            <input class="form-input mono" id="smb-host" value="192.168.1.50" placeholder="192.168.1.x or NAS hostname">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Share Name</label>
+            <input class="form-input mono" id="smb-share" value="GameSaves" placeholder="e.g. GameSaves">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input class="form-input" id="smb-user" value="sage" placeholder="SMB username">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input class="form-input" id="smb-pass" type="password" placeholder="SMB password">
+          </div>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Subfolder on Share (optional)</label>
+          <input class="form-input mono" id="smb-subfolder" value="ludusavi" placeholder="e.g. ludusavi">
+          <div class="form-hint">Full backup path will be: <code>\\HOST\SHARE\SUBFOLDER\</code></div>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">rclone Executable Path</label>
+          <input class="form-input mono" id="rclone-path" value="C:\tools\rclone\rclone.exe" placeholder="Path to rclone.exe">
+          <div class="form-hint">Download rclone from <strong>rclone.org</strong> — Ludusavi uses it for SMB transfers.</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-ghost btn-sm" onclick="testSmb()"><i data-lucide="plug"></i> Test Connection</button>
+        <button class="btn btn-primary btn-sm" onclick="saveSettings()"><i data-lucide="save"></i> Save Settings</button>
+      </div>
+    </div>
+
+    <div class="card" style="max-width:660px">
+      <div class="card-header"><div class="card-title">Backup Behaviour</div></div>
+      <div>
+        <div class="srow">
+          <div class="sinfo"><div class="sname">Keep backup versions</div><div class="sdesc">How many older backups to retain per game on the share</div></div>
+          <select class="form-input" style="width:80px"><option>3</option><option selected>5</option><option>10</option></select>
+        </div>
+        <div class="srow">
+          <div class="sinfo"><div class="sname">Compress saves (ZIP)</div><div class="sdesc">Zip saves before sending — saves bandwidth and space</div></div>
+          <label class="toggle"><input type="checkbox" checked><span class="toggle-sl"></span></label>
+        </div>
+        <div class="srow">
+          <div class="sinfo"><div class="sname">Confirm before restore</div><div class="sdesc">Show a confirmation prompt before overwriting local saves</div></div>
+          <label class="toggle"><input type="checkbox" checked><span class="toggle-sl"></span></label>
+        </div>
+        <div class="srow">
+          <div class="sinfo"><div class="sname">Auto-detect games on launch</div><div class="sdesc">Rescan for installed games each time the dashboard opens</div></div>
+          <label class="toggle"><input type="checkbox"><span class="toggle-sl"></span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="max-width:660px">
+      <div class="card-header"><div class="card-title">Generated rclone Config</div></div>
+      <div style="padding:var(--sp5)">
+        <pre id="rclone-preview" style="font-family:var(--font-mono);font-size:11px;color:var(--color-text);background:var(--color-surface-offset);padding:var(--sp4);border-radius:var(--radius-md);border:1px solid var(--color-border);overflow-x:auto;line-height:1.8"></pre>
+        <div style="margin-top:var(--sp3);display:flex;justify-content:flex-end">
+          <button class="btn btn-ghost btn-sm" onclick="copyConfig()"><i data-lucide="copy"></i> Copy to clipboard</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETUP GUIDE PAGE -->
+  <div class="page" id="page-setup-guide">
+    <div class="card" style="max-width:700px">
+      <div class="card-header"><div class="card-title">Setup Guide — SMB + Ludusavi</div></div>
+      <div style="padding:var(--sp6);display:flex;flex-direction:column;gap:var(--sp6)">
+
+        <div class="callout callout-ok"><i data-lucide="check-circle"></i><div><strong>Good news:</strong> Your fork (Ludusavi v0.31.0) natively supports SMB shares via rclone — no Google Drive or internet required. Just a NAS, PC, or any Windows file share on your network.</div></div>
+
+        <div style="display:flex;flex-direction:column;gap:var(--sp5)">
+
+          <div style="display:flex;gap:var(--sp4);align-items:flex-start">
+            <div style="background:var(--color-primary-highlight);color:var(--color-primary);border-radius:var(--radius-full);width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:var(--tx-xs)">1</div>
+            <div>
+              <div style="font-weight:600;font-size:var(--tx-sm);margin-bottom:var(--sp1)">Install rclone</div>
+              <div style="font-size:var(--tx-xs);color:var(--color-text-muted);line-height:1.7">Download <code>rclone.exe</code> from <strong>rclone.org/downloads</strong> and place it anywhere (e.g. <code>C:\tools\rclone\</code>). You don't need to configure rclone manually — Ludusavi has a built-in SMB setup wizard.</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:var(--sp4);align-items:flex-start">
+            <div style="background:var(--color-primary-highlight);color:var(--color-primary);border-radius:var(--radius-full);width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:var(--tx-xs)">2</div>
+            <div>
+              <div style="font-weight:600;font-size:var(--tx-sm);margin-bottom:var(--sp1)">Configure SMB in Ludusavi GUI</div>
+              <div style="font-size:var(--tx-xs);color:var(--color-text-muted);line-height:1.7">Open Ludusavi → <strong>Other</strong> tab → <strong>Cloud</strong> section → click <strong>Add</strong>. Choose <strong>SMB server</strong>, enter your share host, share name, username and password. Ludusavi calls rclone to validate the connection.</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:var(--sp4);align-items:flex-start">
+            <div style="background:var(--color-primary-highlight);color:var(--color-primary);border-radius:var(--radius-full);width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:var(--tx-xs)">3</div>
+            <div>
+              <div style="font-weight:600;font-size:var(--tx-sm);margin-bottom:var(--sp1)">Or configure via rclone CLI (one-time)</div>
+              <div style="font-size:var(--tx-xs);color:var(--color-text-muted);line-height:1.7">Alternatively run <code>rclone config</code>, choose <strong>New remote → SMB</strong>, name it <code>nas</code>. Enter host, share, user, password. This creates an entry in <code>rclone.conf</code> that Ludusavi reads automatically.</div>
+              <pre style="font-family:var(--font-mono);font-size:10px;background:var(--color-surface-offset);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--sp3);margin-top:var(--sp2);line-height:1.7;overflow-x:auto">[nas]
+type = smb
+host = 192.168.1.50
+user = sage
+pass = &lt;rclone-obscured-password&gt;
+# No "share" field needed — set it in Ludusavi's cloud path</pre>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:var(--sp4);align-items:flex-start">
+            <div style="background:var(--color-primary-highlight);color:var(--color-primary);border-radius:var(--radius-full);width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:var(--tx-xs)">4</div>
+            <div>
+              <div style="font-weight:600;font-size:var(--tx-sm);margin-bottom:var(--sp1)">Set cloud path in Ludusavi</div>
+              <div style="font-size:var(--tx-xs);color:var(--color-text-muted);line-height:1.7">In Ludusavi's Other → Cloud, set the <strong>remote path</strong> to something like <code>GameSaves/ludusavi</code>. This becomes the folder on your share where all game backups are stored.</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:var(--sp4);align-items:flex-start">
+            <div style="background:var(--color-primary-highlight);color:var(--color-primary);border-radius:var(--radius-full);width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:var(--tx-xs)">5</div>
+            <div>
+              <div style="font-weight:600;font-size:var(--tx-sm);margin-bottom:var(--sp1)">Selectively backup/restore</div>
+              <div style="font-size:var(--tx-xs);color:var(--color-text-muted);line-height:1.7">Use this dashboard to pick games by checkbox and click <strong>Backup</strong> or <strong>Restore</strong>. Under the hood it runs:<br><code>ludusavi backup --force "Game Name"</code> then <code>ludusavi cloud upload</code> — or reverse for restore. No auto-sync, only when you click.</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:var(--sp4);align-items:flex-start">
+            <div style="background:var(--color-primary-highlight);color:var(--color-primary);border-radius:var(--radius-full);width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:var(--tx-xs)">6</div>
+            <div>
+              <div style="font-weight:600;font-size:var(--tx-sm);margin-bottom:var(--sp1)">Two-PC workflow (no conflicts)</div>
+              <div style="font-size:var(--tx-xs);color:var(--color-text-muted);line-height:1.7">Since you trigger sync manually, there's no race condition. Finish playing on PC-1 → click <strong>Backup</strong>. Sit at PC-2 → click <strong>Restore</strong>. The SMB share is the single source of truth. Use Ludusavi's <strong>Redirects</strong> (Other tab) to handle different paths between Windows installs.</div>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="background:var(--color-surface-offset);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--sp4)">
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-muted);margin-bottom:var(--sp2)">Resulting config.yaml (cloud section)</div>
+          <pre style="font-family:var(--font-mono);font-size:10px;line-height:1.8;color:var(--color-text);overflow-x:auto">cloud:
+  remote:
+    type: Smb            # native Ludusavi SMB type via rclone
+    id: nas              # your rclone remote name
+  path: "GameSaves/ludusavi"
+  synchronize: false     # manual only — you control when it runs</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- CONFIRM MODAL -->
+<div class="overlay" id="confirm-modal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="confirm-title">Confirm</div>
+      <button class="btn-icon" onclick="closeModal('confirm-modal')"><i data-lucide="x"></i></button>
+    </div>
+    <div class="modal-body" id="confirm-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('confirm-modal')">Cancel</button>
+      <button class="btn" id="confirm-ok-btn" onclick="confirmAction()">Continue</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+lucide.createIcons();
+
+// ── DATA ─────────────────────────────────────────────────────────
+const GAMES = [
+  {id:1,name:'Elden Ring',path:'%APPDATA%\\EldenRing\\',status:'ok',lastBackup:'2026-06-02 14:08',size:'1.2 MB'},
+  {id:2,name:'Hollow Knight',path:'%APPDATA%\\Hollow Knight\\',status:'ok',lastBackup:'2026-06-02 11:30',size:'420 KB'},
+  {id:3,name:'Cyberpunk 2077',path:'%USERPROFILE%\\Saved Games\\CD Projekt Red\\',status:'stale',lastBackup:'2026-05-30 22:00',size:'8.7 MB'},
+  {id:4,name:"Baldur's Gate 3",path:'%LOCALAPPDATA%\\Larian Studios\\Baldur\'s Gate 3\\',status:'never',lastBackup:null,size:'14.1 MB'},
+  {id:5,name:'Stardew Valley',path:'%APPDATA%\\StardewValley\\Saves\\',status:'ok',lastBackup:'2026-06-02 09:15',size:'2.3 MB'},
+  {id:6,name:'Hades',path:'%USERPROFILE%\\Saved Games\\Supergiant Games\\Hades\\',status:'ok',lastBackup:'2026-06-01 20:44',size:'640 KB'},
+  {id:7,name:'Disco Elysium',path:'%APPDATA%\\ZA\\Disco Elysium\\',status:'stale',lastBackup:'2026-05-25 15:10',size:'890 KB'},
+  {id:8,name:'The Witcher 3',path:'%USERPROFILE%\\Documents\\The Witcher 3\\gamesaves\\',status:'ok',lastBackup:'2026-05-28 12:00',size:'5.6 MB'},
+  {id:9,name:'Deep Rock Galactic',path:'%LOCALAPPDATA%\\FSD\\Saved\\SaveGames\\',status:'never',lastBackup:null,size:'320 KB'},
+  {id:10,name:'Valheim',path:'%APPDATA%\\LocalLow\\IronGate\\Valheim\\worlds_local\\',status:'ok',lastBackup:'2026-06-01 17:30',size:'3.4 MB'},
+  {id:11,name:'RimWorld',path:'%APPDATA%\\LocalLow\\Ludeon Studios\\RimWorld\\Saves\\',status:'ok',lastBackup:'2026-05-29 21:00',size:'18.2 MB'},
+  {id:12,name:'Terraria',path:'%USERPROFILE%\\Documents\\My Games\\Terraria\\Worlds\\',status:'stale',lastBackup:'2026-05-20 10:00',size:'1.8 MB'},
+  {id:13,name:'Celeste',path:'%APPDATA%\\Celeste\\',status:'never',lastBackup:null,size:'45 KB'},
+  {id:14,name:'Hades II',path:'%USERPROFILE%\\Saved Games\\Supergiant Games\\Hades2\\',status:'ok',lastBackup:'2026-06-02 13:00',size:'720 KB'},
+  {id:15,name:'Monster Hunter: World',path:'%APPDATA%\\MonsterHunterWorld\\',status:'never',lastBackup:null,size:'2.1 MB'},
+];
+
+let log = [
+  {type:'up',msg:'Elden Ring backed up to SMB share',time:'14:08'},
+  {type:'up',msg:'Hollow Knight backed up to SMB share',time:'11:30'},
+  {type:'up',msg:'Stardew Valley backed up to SMB share',time:'09:15'},
+  {type:'down',msg:'Hades restored from SMB share',time:'20:44'},
+  {type:'up',msg:'Valheim backed up to SMB share',time:'17:30'},
+];
+
+let selected = new Set();
+let pendingAction = null;
+let filteredGames = [...GAMES];
+
+// ── NAVIGATION ────────────────────────────────────────────────────
+const titles = {games:'Games',log:'Operation Log',settings:'Settings','setup-guide':'Setup Guide'};
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelector(`.nav-item[onclick="go('${id}')"]`)?.classList.add('active');
+  document.getElementById('topbar-title').textContent=titles[id]||id;
+  document.getElementById('sidebar').classList.remove('open');
+  const isGames=id==='games';
+  document.getElementById('sel-all-btn').style.display=isGames?'':'none';
+  document.getElementById('bulk-backup-btn').style.display=isGames?'':'none';
+  document.getElementById('bulk-restore-btn').style.display=isGames?'':'none';
+  if(id==='log') renderLog();
+  if(id==='settings') updateRclonePreview();
+}
+
+// ── RENDER GAMES ─────────────────────────────────────────────────
+function statusBadge(s){
+  if(s==='ok') return '<span class="badge b-ok"><i data-lucide="check-circle"></i> Backed up</span>';
+  if(s==='stale') return '<span class="badge b-warn"><i data-lucide="clock"></i> Stale</span>';
+  if(s==='never') return '<span class="badge b-muted">Never backed up</span>';
+  return '';
+}
+
+function renderGames(){
+  const q=document.getElementById('search-box').value.toLowerCase();
+  const sf=document.getElementById('filter-status').value;
+  filteredGames=GAMES.filter(g=>{
+    const mq=!q||g.name.toLowerCase().includes(q);
+    const ms=sf==='all'||g.status===sf||(sf==='ok'&&g.status==='ok');
+    return mq&&ms;
+  });
+
+  const tbody=document.getElementById('game-tbody');
+  if(!filteredGames.length){
+    tbody.innerHTML=`<tr><td colspan="6"><div class="empty"><i data-lucide="search-x"></i><h3>No games found</h3><p>Try adjusting your search or filter.</p></div></td></tr>`;
+    lucide.createIcons();return;
+  }
+
+  tbody.innerHTML=filteredGames.map(g=>`
+    <tr id="row-${g.id}">
+      <td><input type="checkbox" class="cb game-cb" data-id="${g.id}" ${selected.has(g.id)?'checked':''} onchange="toggleGame(${g.id},this.checked)"></td>
+      <td>
+        <div class="game-name">${g.name}</div>
+        <div class="game-path">${g.path}</div>
+      </td>
+      <td>${statusBadge(g.status)}</td>
+      <td style="font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted)">${g.lastBackup||'—'}</td>
+      <td style="color:var(--color-text-muted);font-variant-numeric:tabular-nums">${g.size}</td>
+      <td>
+        <div class="game-actions">
+          <button class="btn btn-success btn-sm" onclick="runSingle('backup',${g.id})" title="Backup this game"><i data-lucide="upload-cloud"></i></button>
+          <button class="btn btn-blue btn-sm" onclick="runSingle('restore',${g.id})" title="Restore this game"><i data-lucide="download-cloud"></i></button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+  lucide.createIcons();
+  updateKpis();
+}
+
+function filterGames(){renderGames();}
+
+function updateKpis(){
+  document.getElementById('kpi-total').textContent=GAMES.length;
+  document.getElementById('kpi-sel').textContent=selected.size;
+  const lastOp=log[0];
+  if(lastOp){
+    document.getElementById('kpi-last').textContent=lastOp.time;
+    document.getElementById('kpi-last-sub').textContent=lastOp.msg.split(' ')[0];
+  }
+  const hasSel=selected.size>0;
+  document.getElementById('bulk-backup-btn').disabled=!hasSel;
+  document.getElementById('bulk-restore-btn').disabled=!hasSel;
+  const selBar=document.getElementById('sel-bar');
+  selBar.style.display=hasSel?'flex':'none';
+  document.getElementById('sel-count-label').textContent=`${selected.size} game${selected.size!==1?'s':''} selected`;
+  document.getElementById('header-cb').indeterminate=hasSel&&selected.size<GAMES.length;
+  document.getElementById('header-cb').checked=selected.size===GAMES.length;
+}
+
+// ── SELECTION ─────────────────────────────────────────────────────
+function toggleGame(id,checked){
+  checked?selected.add(id):selected.delete(id);
+  updateKpis();
+}
+function toggleAll(checked){
+  filteredGames.forEach(g=>checked?selected.add(g.id):selected.delete(g.id));
+  renderGames();
+}
+function selectAll(){
+  GAMES.forEach(g=>selected.add(g.id));
+  renderGames();
+}
+function clearSel(){
+  selected.clear();
+  document.getElementById('search-box').value='';
+  document.getElementById('filter-status').value='all';
+  renderGames();
+}
+
+// ── OPERATIONS ────────────────────────────────────────────────────
+function runSingle(op,id){
+  const g=GAMES.find(x=>x.id===id);
+  pendingAction={op,ids:[id]};
+  const isRestore=op==='restore';
+  document.getElementById('confirm-title').textContent=isRestore?'Confirm Restore':'Confirm Backup';
+  document.getElementById('confirm-body').innerHTML=`
+    <div style="font-size:var(--tx-xs);color:var(--color-text-muted);margin-bottom:var(--sp3)">${isRestore?'This will overwrite your local save with the version from the SMB share.':'This will copy your local save to the SMB share.'}</div>
+    <div style="background:var(--color-surface-offset);border-radius:var(--radius-md);padding:var(--sp3) var(--sp4);font-size:var(--tx-xs)">
+      <strong>${g.name}</strong><br>
+      <span style="font-family:var(--font-mono);color:var(--color-text-muted)">${g.path}</span>
+    </div>
+    ${isRestore?`<div class="callout callout-warn" style="margin-top:var(--sp3)"><i data-lucide="alert-triangle"></i><span>Your current local save will be replaced. Ludusavi keeps a local backup before restoring.</span></div>`:''}
+  `;
+  const btn=document.getElementById('confirm-ok-btn');
+  btn.textContent=isRestore?'Restore':'Backup';
+  btn.className=`btn ${isRestore?'btn-blue':'btn-success'}`;
+  document.getElementById('confirm-modal').classList.add('open');
+  lucide.createIcons();
+}
+
+function runBulk(op){
+  const ids=[...selected];
+  const names=ids.map(id=>GAMES.find(g=>g.id===id)?.name).filter(Boolean);
+  pendingAction={op,ids};
+  const isRestore=op==='restore';
+  document.getElementById('confirm-title').textContent=isRestore?`Restore ${ids.length} Games`:`Backup ${ids.length} Games`;
+  document.getElementById('confirm-body').innerHTML=`
+    <div style="font-size:var(--tx-xs);color:var(--color-text-muted);margin-bottom:var(--sp3)">${isRestore?'Overwrite local saves with versions from SMB share:':'Copy local saves to SMB share:'}</div>
+    <div style="background:var(--color-surface-offset);border-radius:var(--radius-md);padding:var(--sp3) var(--sp4);display:flex;flex-direction:column;gap:4px;max-height:180px;overflow-y:auto">
+      ${names.map(n=>`<div style="font-size:var(--tx-xs)">· ${n}</div>`).join('')}
+    </div>
+    ${isRestore?`<div class="callout callout-warn" style="margin-top:var(--sp3)"><i data-lucide="alert-triangle"></i><span>Local saves will be overwritten. Ludusavi retains a pre-restore backup.</span></div>`:''}
+  `;
+  const btn=document.getElementById('confirm-ok-btn');
+  btn.textContent=isRestore?`Restore ${ids.length} Games`:`Backup ${ids.length} Games`;
+  btn.className=`btn ${isRestore?'btn-blue':'btn-success'}`;
+  document.getElementById('confirm-modal').classList.add('open');
+  lucide.createIcons();
+}
+
+function confirmAction(){
+  closeModal('confirm-modal');
+  if(!pendingAction) return;
+  const {op,ids}=pendingAction;
+  pendingAction=null;
+  executeOperation(op,ids);
+}
+
+function executeOperation(op,ids){
+  const pw=document.getElementById('progress-wrap');
+  const pf=document.getElementById('progress-fill');
+  const pl=document.getElementById('progress-label');
+  const pp=document.getElementById('progress-pct');
+  pw.style.display='block';
+  let done=0;
+  const total=ids.length;
+  const isRestore=op==='restore';
+
+  function tick(){
+    if(done>=total){
+      pw.style.display='none';
+      pf.style.width='0%';
+      const opLabel=isRestore?'restored from':'backed up to';
+      const names=ids.map(id=>GAMES.find(g=>g.id===id)?.name).filter(Boolean);
+      if(!isRestore) ids.forEach(id=>{const g=GAMES.find(x=>x.id===id);if(g){g.status='ok';g.lastBackup=new Date().toISOString().slice(0,16).replace('T',' ');}});
+      names.forEach(name=>{
+        log.unshift({type:isRestore?'down':'up',msg:`${name} ${opLabel} SMB share`,time:new Date().toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'})});
+      });
+      toast(`${total} game${total!==1?'s':''} ${isRestore?'restored':'backed up'} successfully`,'success');
+      renderGames();
+      return;
+    }
+    const g=GAMES.find(x=>x.id===ids[done]);
+    done++;
+    const pct=Math.round((done/total)*100);
+    pf.style.width=pct+'%';
+    pl.textContent=`${isRestore?'Restoring':'Backing up'}: ${g?.name}… (${done}/${total})`;
+    pp.textContent=pct+'%';
+    setTimeout(tick,600+Math.random()*400);
+  }
+  tick();
+}
+
+function rescan(){
+  toast('Rescanning for installed games…','info');
+  setTimeout(()=>toast('Scan complete — 15 games detected','success'),1800);
+}
+
+// ── LOG ───────────────────────────────────────────────────────────
+function renderLog(){
+  const lb=document.getElementById('log-body');
+  if(!log.length){lb.innerHTML=`<div class="empty"><i data-lucide="activity"></i><h3>No operations yet</h3><p>Run a backup or restore to see log entries.</p></div>`;lucide.createIcons();return;}
+  lb.innerHTML=log.map(e=>`
+    <div class="log-item">
+      <div class="log-dot ${e.type}"></div>
+      <div class="log-msg">${e.msg}</div>
+      <div class="log-time">${e.time}</div>
+    </div>
+  `).join('');
+}
+
+function clearLog(){log=[];renderLog();toast('Log cleared','info');}
+
+// ── SETTINGS ──────────────────────────────────────────────────────
+function updateRclonePreview(){
+  const host=document.getElementById('smb-host')?.value||'192.168.1.50';
+  const share=document.getElementById('smb-share')?.value||'GameSaves';
+  const user=document.getElementById('smb-user')?.value||'sage';
+  const sub=document.getElementById('smb-subfolder')?.value||'ludusavi';
+  document.getElementById('rclone-preview').textContent=`[nas]\ntype = smb\nhost = ${host}\nuser = ${user}\npass = <run: rclone obscure yourpassword>\n\n# In Ludusavi config.yaml:\ncloud:\n  remote:\n    type: Smb\n    id: nas\n  path: "${share}/${sub}"\n  synchronize: false`;
+  document.getElementById('smb-path-label').textContent=`\\\\${host}\\${share}\\${sub}`;
+}
+
+function saveSettings(){
+  updateRclonePreview();
+  document.getElementById('smb-dot').className='dot dot-green';
+  document.getElementById('smb-status-text').textContent='Connected · rclone SMB';
+  toast('Settings saved — rclone config updated','success');
+}
+
+function testSmb(){
+  document.getElementById('smb-dot').className='dot dot-yellow';
+  document.getElementById('smb-status-text').textContent='Testing…';
+  toast('Testing SMB connection…','info');
+  setTimeout(()=>{
+    document.getElementById('smb-dot').className='dot dot-green';
+    document.getElementById('smb-status-text').textContent='Connected · rclone SMB';
+    toast('SMB share reachable — connection OK','success');
+  },1500);
+}
+
+function copyConfig(){
+  const txt=document.getElementById('rclone-preview').textContent;
+  navigator.clipboard?.writeText(txt).then(()=>toast('Copied to clipboard','success')).catch(()=>toast('Copy failed — select text manually','info'));
+}
+
+['smb-host','smb-share','smb-user','smb-subfolder'].forEach(id=>{
+  document.getElementById(id)?.addEventListener('input',updateRclonePreview);
+});
+
+// ── MODAL ─────────────────────────────────────────────────────────
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.getElementById('confirm-modal').addEventListener('click',function(e){if(e.target===this)closeModal('confirm-modal');});
+
+// ── TOAST ─────────────────────────────────────────────────────────
+function toast(msg,type='info'){
+  const c={success:'var(--color-success)',info:'var(--color-primary)',warning:'var(--color-warning)',error:'var(--color-error)'};
+  const el=document.createElement('div');
+  el.style.cssText=`background:var(--color-surface-2);border:1px solid var(--color-border);border-left:3px solid ${c[type]};border-radius:var(--radius-md);padding:var(--sp3) var(--sp4);font-size:var(--tx-xs);color:var(--color-text);box-shadow:var(--shadow-md);max-width:300px;opacity:0;transform:translateX(20px);transition:all .22s ease;pointer-events:auto;`;
+  el.textContent=msg;
+  document.getElementById('toast').appendChild(el);
+  requestAnimationFrame(()=>{el.style.opacity='1';el.style.transform='translateX(0)';});
+  setTimeout(()=>{el.style.opacity='0';el.style.transform='translateX(20px)';setTimeout(()=>el.remove(),250);},3200);
+}
+
+// ── THEME ─────────────────────────────────────────────────────────
+(function(){
+  const t=document.querySelector('[data-theme-toggle]'),r=document.documentElement;
+  let d=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  r.setAttribute('data-theme',d);
+  const sun=`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>`;
+  const moon=`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+  function upd(){t.innerHTML=d==='dark'?sun:moon;}
+  upd();
+  t&&t.addEventListener('click',()=>{d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);upd();});
+})();
+
+// ── INIT ──────────────────────────────────────────────────────────
+renderGames();
+updateRclonePreview();
+go('games');
+</script>
+</body>
+</html>
